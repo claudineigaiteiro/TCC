@@ -95,6 +95,11 @@
         <DCCReference Include="src\Register.pas"/>
         <DCCReference Include="src\Controlers\Controlers.Aneometro.pas"/>
         <DCCReference Include="src\services\services.aneometro.pas"/>
+        <DCCReference Include="src\conecxao_db\Conecxao_db.dmConecxao.pas">
+            <Form>dmConecxao</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

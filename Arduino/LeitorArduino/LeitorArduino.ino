@@ -112,7 +112,7 @@ void sendWindDataToServer(float windspeed, float speedwind) {
     HTTPClient http;
 
     // Define o endereço da API
-    http.begin("http://192.168.0.102:9000/aneometro");
+    http.begin("http://192.168.0.106:9000/aneometro");                     
 
     // Define o tipo de conteúdo como JSON
     http.addHeader("Content-Type", "application/json");
