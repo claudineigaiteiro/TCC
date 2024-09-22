@@ -1,0 +1,25 @@
+unit services.aneometro;
+
+interface
+
+procedure postAneometro(AJson: String);
+
+implementation
+
+uses
+  System.Classes, System.SysUtils;
+
+procedure postAneometro(AJson: String);
+Var
+  LLista: TStringList;
+Begin
+  LLista := TStringList.Create;
+  try
+    LLista.Add(AJson);
+  finally
+    FreeAndNil(LLista);
+  end;
+
+End;
+
+end.

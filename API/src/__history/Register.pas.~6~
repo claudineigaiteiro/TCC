@@ -1,0 +1,20 @@
+unit Register;
+
+interface
+
+uses
+  Horse, Horse.Jhonson, Horse.CORS, Routers.Aneometro;
+
+procedure registers;
+
+implementation
+
+procedure registers;
+Begin
+  THorse.Use(CORS);
+  THorse.Use(Jhonson());
+
+  RoutersAneometro;
+End;
+
+end.

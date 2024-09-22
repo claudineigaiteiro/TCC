@@ -1,0 +1,14 @@
+unit services.aneometro;
+
+interface
+
+procedure postAneometro(AJson: String);
+
+implementation
+
+procedure postAneometro(AJson: String);
+Begin
+  Writeln(AJson);
+End;
+
+end.

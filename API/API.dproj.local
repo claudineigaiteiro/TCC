@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2023/10/14 17:05:48.000.953,=C:\Users\Claudinei Mayolo\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2023/10/17 22:43:11.000.802,=C:\Users\Claudinei Mayolo\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2024/03/05 19:10:52.000.227,=C:\Users\Claudinei Mayolo\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2024/03/05 19:11:54.000.958,=C:\Users\Claudinei Mayolo\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2024/03/05 22:22:00.000.823,=C:\Users\Claudinei Mayolo\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2024/03/05 22:22:24.000.927,=C:\Users\Claudinei Mayolo\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2024/03/06 19:56:17.000.956,=C:\Users\Claudinei Mayolo\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2024/09/17 21:28:49.000.045,D:\Projetos\TCC\API\API.dproj=C:\Users\Claudinei Mayolo\Documents\Embarcadero\Studio\Projects\Project2.dproj</Transaction>
+    <Transaction>2024/09/21 22:56:38.489,=D:\Projetos\TCC\API\Unit1.pas</Transaction>
+    <Transaction>2024/09/21 23:00:24.730,D:\Projetos\TCC\API\src\routers\Sercive.Aneometro.pas=D:\Projetos\TCC\API\Unit1.pas</Transaction>
+    <Transaction>2024/09/21 23:04:30.641,=D:\Projetos\TCC\API\Unit1.pas</Transaction>
+    <Transaction>2024/09/21 23:04:47.868,D:\Projetos\TCC\API\Services.Register.pas=D:\Projetos\TCC\API\Unit1.pas</Transaction>
+    <Transaction>2024/09/21 23:05:22.076,D:\Projetos\TCC\API\Services.Register.pas=</Transaction>
+    <Transaction>2024/09/21 23:06:07.003,=D:\Projetos\TCC\API\Unit1.pas</Transaction>
+    <Transaction>2024/09/21 23:06:22.027,D:\Projetos\TCC\API\src\Register.pas=D:\Projetos\TCC\API\Unit1.pas</Transaction>
+    <Transaction>2024/09/21 23:10:40.946,D:\Projetos\TCC\API\src\routers\Routers.Aneometro.pas=D:\Projetos\TCC\API\src\routers\Sercive.Aneometro.pas</Transaction>
+    <Transaction>2024/09/21 23:15:12.392,=D:\Projetos\TCC\API\Unit1.pas</Transaction>
+    <Transaction>2024/09/21 23:15:31.764,D:\Projetos\TCC\API\src\Controlers\Controlers.Aneometro.pas=D:\Projetos\TCC\API\Unit1.pas</Transaction>
+    <Transaction>2024/09/21 23:34:09.401,=D:\Projetos\TCC\API\Unit1.pas</Transaction>
+    <Transaction>2024/09/21 23:34:26.000,D:\Projetos\TCC\API\services.aneometro.pas=D:\Projetos\TCC\API\Unit1.pas</Transaction>
+    <Transaction>2024/09/21 23:34:36.934,D:\Projetos\TCC\API\services.aneometro.pas=</Transaction>
+    <Transaction>2024/09/21 23:35:10.742,=D:\Projetos\TCC\API\Unit1.pas</Transaction>
+    <Transaction>2024/09/21 23:35:24.718,D:\Projetos\TCC\API\src\services\services.aneometro.pas=D:\Projetos\TCC\API\Unit1.pas</Transaction>
+    <Transaction>2024/09/21 23:50:37.014,=D:\Projetos\TCC\API\Unit1.pas</Transaction>
+    <Transaction>2024/09/21 23:51:30.874,D:\Projetos\TCC\API\Visor.pas=D:\Projetos\TCC\API\Unit1.pas</Transaction>
+    <Transaction>2024/09/21 23:51:30.874,D:\Projetos\TCC\API\Visor.dfm=D:\Projetos\TCC\API\Unit1.dfm</Transaction>
+    <Transaction>2024/09/21 23:56:32.085,D:\Projetos\TCC\API\Visor.pas=</Transaction>
+  </Transactions>
+</BorlandProject>
