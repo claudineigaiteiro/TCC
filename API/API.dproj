@@ -100,6 +100,9 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
+        <DCCReference Include="src\routers\Routers.Pluviometro.pas"/>
+        <DCCReference Include="src\Controlers\Controlers.Pluviometro.pas"/>
+        <DCCReference Include="src\services\services.pluviometro.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

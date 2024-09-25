@@ -13,8 +13,11 @@ uses
   Register in 'src\Register.pas',
   Controlers.Aneometro in 'src\Controlers\Controlers.Aneometro.pas',
   services.aneometro in 'src\services\services.aneometro.pas',
-  Conecxao_db.dmConecxao in 'src\conecxao_db\Conecxao_db.dmConecxao.pas',
-  System.SysUtils {dmConecxao: TDataModule};
+  Conecxao_db.dmConecxao in 'src\conecxao_db\Conecxao_db.dmConecxao.pas' {dmConecxao: TDataModule},
+  System.SysUtils {dmConecxao: TDataModule},
+  Routers.Pluviometro in 'src\routers\Routers.Pluviometro.pas',
+  Controlers.Pluviometro in 'src\Controlers\Controlers.Pluviometro.pas',
+  services.pluviometro in 'src\services\services.pluviometro.pas';
 
 begin
   dmConecxao := TdmConecxao.Create(nil);

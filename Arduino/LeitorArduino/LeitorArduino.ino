@@ -7,8 +7,8 @@
 
 // Constants definitions
 const float pi = 3.14159265; // Número pi
-int period = 5000; // Tempo de medida (milissegundos)
-int radius = 105; // Ajusta o raio do anemômetro em milímetros
+const int period = 5000; // Tempo de medida (milissegundos)
+const int radius = 105; // Ajusta o raio do anemômetro em milímetros
 
 // Variáveis
 unsigned int counter = 0; // Contador de pulsos para o sensor
@@ -18,70 +18,47 @@ float speedwind = 0; // Velocidade do vento (km/h)
 
 // Wi-Fi credentials
 const char* ssid = "Auri mayolo";     // Substitua pelo nome da sua rede Wi-Fi
-const char* password = "auri2019"; // Substitua pela senha da sua rede Wi-Fi
+const char* password = "auri2019";    // Substitua pela senha da sua rede Wi-Fi
 
 void setup() {
-  // Configura o pino do sensor como entrada com pull-up
-  pinMode(Hall_sensor, INPUT_PULLUP); 
-
-  // Inicia a comunicação serial
-  Serial.begin(9600); 
-
-  // Conectar ao Wi-Fi
-  connectToWiFi();
+  pinMode(Hall_sensor, INPUT_PULLUP); // Configura o pino do sensor como entrada com pull-up
+  Serial.begin(9600); // Inicia a comunicação serial
+  connectToWiFi(); // Conectar ao Wi-Fi
 }
 
 void loop() {
-  // Inicia a medição da velocidade do vento
-  windvelocity();
-
-  // Calcula as RPM (rotações por minuto)
-  RPMcalc();
-
-  // Exibe a velocidade em m/s
-  WindSpeed();
-  Serial.print("Velocidade do vento: ");
-  Serial.print(windspeed);
-  Serial.print(" [m/s] ");
-  
-  // Exibe a velocidade em km/h
-  SpeedWind();
-  Serial.print(" / ");
-  Serial.print(speedwind);
-  Serial.println(" [km/h]");
-
-  // Envia os dados para o servidor via HTTP POST em formato JSON
-  sendWindDataToServer(windspeed, speedwind);
-
-  delay(2000); // Intervalo entre leituras
+  anemometro(); // Chama o método comprimido
 }
 
-// Função para medir a velocidade do vento
-void windvelocity() {
+void anemometro() {
   counter = 0; // Reinicia o contador
   attachInterrupt(digitalPinToInterrupt(Hall_sensor), addcount, RISING); // Ativar interrupção
-  
+
   unsigned long startTime = millis();
   while (millis() < startTime + period) {
     // Aguarda o período de medição
   }
   
-  detachInterrupt(Hall_sensor); // Desativar interrupção
-}
+  detachInterrupt(Hall_sensor); // Desativa a interrupção
 
-// Calcula as RPM (rotações por minuto)
-void RPMcalc() {
-  RPM = ((counter) * 60) / (period / 1000); // Calcula as rotações por minuto (RPM)
-}
+  // Calcula as RPM (rotações por minuto)
+  RPM = ((counter) * 60) / (period / 1000);
 
-// Calcula a velocidade do vento em m/s
-void WindSpeed() {
-  windspeed = ((4 * pi * radius * RPM) / 60) / 1000; // Calcula a velocidade do vento em m/s
-}
+  // Calcula a velocidade do vento em m/s
+  windspeed = ((4 * pi * radius * RPM) / 60) / 1000;
 
-// Calcula a velocidade do vento em km/h
-void SpeedWind() {
-  speedwind = windspeed * 3.6; // Converte de m/s para km/h
+  // Converte de m/s para km/h
+  speedwind = windspeed * 3.6;
+
+  // Exibe as velocidades no terminal serial
+  Serial.print("Velocidade do vento: ");
+  Serial.print(windspeed);
+  Serial.print(" [m/s] / ");
+  Serial.print(speedwind);
+  Serial.println(" [km/h]");
+
+  // Envia os dados para o servidor via HTTP POST em formato JSON
+  sendWindDataToServer(windspeed, speedwind);
 }
 
 // Função chamada pela interrupção para contar os pulsos
@@ -93,45 +70,35 @@ void addcount() {
 void connectToWiFi() {
   Serial.print("Conectando-se à rede Wi-Fi ");
   Serial.println(ssid);
-
   WiFi.begin(ssid, password);
-
+  
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
     Serial.print(".");
   }
-
-  Serial.println("");
-  Serial.println("Conectado à rede Wi-Fi");
+  
+  Serial.println("\nConectado à rede Wi-Fi");
   Serial.println(WiFi.localIP());  // Mostra o IP local do ESP32
 }
 
 // Função para enviar os dados de velocidade do vento para o servidor
 void sendWindDataToServer(float windspeed, float speedwind) {
-  if (WiFi.status() == WL_CONNECTED) {  // Verifica se está conectado ao Wi-Fi
+  if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
+    http.begin("http://192.168.0.106:9000/aneometro"); // Endereço da API
+    http.addHeader("Content-Type", "application/json"); // Tipo de conteúdo JSON
 
-    // Define o endereço da API
-    http.begin("http://192.168.0.106:9000/aneometro");                     
-
-    // Define o tipo de conteúdo como JSON
-    http.addHeader("Content-Type", "application/json");
-
-    // Cria o objeto JSON
     StaticJsonDocument<200> jsonDoc;
     jsonDoc["windspeed_mps"] = windspeed; // Velocidade em m/s
     jsonDoc["speedwind_kph"] = speedwind; // Velocidade em km/h
-
-    // Converte o objeto JSON para string
+    
     String jsonData;
     serializeJson(jsonDoc, jsonData);
+    
+    int httpResponseCode = http.POST(jsonData); // Envia a requisição POST
 
-    // Envia a requisição POST com o JSON
-    int httpResponseCode = http.POST(jsonData);
-
-    // Verifica o código de resposta
     if (httpResponseCode > 0) {
-      String response = http.getString();  // Recebe a resposta
+      String response = http.getString();
       Serial.print("HTTP Response code: ");
       Serial.println(httpResponseCode);
       Serial.println("Resposta do servidor: ");
@@ -141,8 +108,7 @@ void sendWindDataToServer(float windspeed, float speedwind) {
       Serial.println(httpResponseCode);
     }
 
-    // Fecha a conexão
-    http.end();
+    http.end(); // Fecha a conexão
   } else {
     Serial.println("Erro na conexão Wi-Fi");
   }
