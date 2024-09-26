@@ -17,7 +17,10 @@ uses
   System.SysUtils {dmConecxao: TDataModule},
   Routers.Pluviometro in 'src\routers\Routers.Pluviometro.pas',
   Controlers.Pluviometro in 'src\Controlers\Controlers.Pluviometro.pas',
-  services.pluviometro in 'src\services\services.pluviometro.pas';
+  services.pluviometro in 'src\services\services.pluviometro.pas',
+  Routers.Imagem in 'src\routers\Routers.Imagem.pas',
+  Controlers.Imagens in 'src\Controlers\Controlers.Imagens.pas',
+  Services.Imagens in 'src\services\Services.Imagens.pas';
 
 begin
   dmConecxao := TdmConecxao.Create(nil);

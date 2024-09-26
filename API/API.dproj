@@ -103,6 +103,9 @@
         <DCCReference Include="src\routers\Routers.Pluviometro.pas"/>
         <DCCReference Include="src\Controlers\Controlers.Pluviometro.pas"/>
         <DCCReference Include="src\services\services.pluviometro.pas"/>
+        <DCCReference Include="src\routers\Routers.Imagem.pas"/>
+        <DCCReference Include="src\Controlers\Controlers.Imagens.pas"/>
+        <DCCReference Include="src\services\Services.Imagens.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

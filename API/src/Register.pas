@@ -3,7 +3,8 @@ unit Register;
 interface
 
 uses
-  Horse, Horse.Jhonson, Horse.CORS, Routers.Aneometro, Routers.Pluviometro;
+  Horse, Horse.Jhonson, Horse.CORS, Routers.Aneometro, Routers.Pluviometro,
+  Routers.Imagem;
 
 procedure registers;
 
@@ -16,6 +17,7 @@ Begin
 
   RoutersAneometro;
   RoutersPluviometro;
+  RoutersImagens;
 
   THorse.Listen(9000);
 End;

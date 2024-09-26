@@ -1,0 +1,14 @@
+{
+	"hash": "d41d8cd98f00b204e9800998ecf8427e",
+	"updated": "2024-09-24T23:04:55.0350845-03:00",
+	"installedModules": {
+		"github.com/academiadocodigo/tbgwebcharts": {
+			"name": "tbgwebcharts",
+			"version": "1.0.0",
+			"hash": "d7942f5d0f7be04ddfd973d27f45e768",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		}
+	}
+}
