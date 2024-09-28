@@ -2,6 +2,7 @@
 #include "Arduino.h"
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include "Base64.h" // Biblioteca para conversão em base64
 
 #define PWDN_GPIO_NUM    32
 #define RESET_GPIO_NUM   -1
@@ -24,8 +25,10 @@
 // Pino do flash LED
 #define FLASH_GPIO_NUM   4
 
-const char* ssid = "Variani404";
-const char* password = "ap4042022rv";
+//const char* ssid = "Variani404";
+//const char* password = "ap4042022rv";
+const char* ssid = "Auri mayolo";
+const char* password = "auri2019";
 
 void sendImageToServer() {
   // Captura uma foto
@@ -35,21 +38,16 @@ void sendImageToServer() {
     return;
   }
 
-  // Converte a imagem para hexadecimal
-  String imageHex = "";
-  for (size_t i = 0; i < fb->len; i++) {
-    char hex[3];
-    sprintf(hex, "%02x", fb->buf[i]);
-    imageHex += hex;
-  }
+  // Converte a imagem para base64
+  String imageBase64 = base64::encode(fb->buf, fb->len);
 
-  // Cria o JSON com a imagem em hexadecimal
-  String json = "{\"image\": \"" + imageHex + "\"}";
+  // Cria o JSON com a imagem em base64
+  String json = "{\"image\": \"" + imageBase64 + "\"}";
 
   // Faz o POST para o servidor
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-    http.begin("http://192.168.0.101:9000/imagem");
+    http.begin("http://192.168.0.106:9000/imagem");
     http.addHeader("Content-Type", "application/json");
 
     int httpResponseCode = http.POST(json);
