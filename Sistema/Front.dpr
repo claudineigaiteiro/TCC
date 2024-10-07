@@ -4,7 +4,9 @@ uses
   Vcl.Forms,
   MenuPrincipal in 'MenuPrincipal.pas' {Form2},
   Vcl.Themes,
-  Vcl.Styles;
+  Vcl.Styles,
+  UnFrmUnidades in 'UnFrmUnidades.pas' {FrmUnidades},
+  UnDmConecxao in 'UnDmConecxao.pas' {DmConecxao: TDataModule};
 
 {$R *.res}
 

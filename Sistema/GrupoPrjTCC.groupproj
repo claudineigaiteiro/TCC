@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{C5CB1B3A-7C66-468A-B534-5ABCECAFF69A}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Front.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\API\API.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Front">
+        <MSBuild Projects="Front.dproj"/>
+    </Target>
+    <Target Name="Front:Clean">
+        <MSBuild Projects="Front.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Front:Make">
+        <MSBuild Projects="Front.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="API">
+        <MSBuild Projects="..\API\API.dproj"/>
+    </Target>
+    <Target Name="API:Clean">
+        <MSBuild Projects="..\API\API.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="API:Make">
+        <MSBuild Projects="..\API\API.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Front;API"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Front:Clean;API:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Front:Make;API:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

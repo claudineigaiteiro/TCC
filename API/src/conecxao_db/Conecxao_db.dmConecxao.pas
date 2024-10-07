@@ -18,6 +18,10 @@ type
     FdqAneometroID: TIntegerField;
     FdqAneometroDATA_HORA: TSQLTimeStampField;
     FdqAneometroVELOCIDADE: TFMTBCDField;
+    FdqUnidade: TFDQuery;
+    IntegerField1: TIntegerField;
+    SQLTimeStampField1: TSQLTimeStampField;
+    FMTBCDField1: TFMTBCDField;
   private
     { Private declarations }
   public
@@ -28,7 +32,6 @@ var
   dmConecxao: TdmConecxao;
 
 implementation
-
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}

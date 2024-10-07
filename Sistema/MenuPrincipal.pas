@@ -24,6 +24,7 @@ type
     FDQuery1MEDICAO: TFMTBCDField;
     FDQuery1RGB: TStringField;
     procedure Button1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     WebChart: TWebCharts;
@@ -38,37 +39,33 @@ var
 implementation
 
 uses
-  Charts.Types;
+  Charts.Types, UnFrmUnidades;
 
 {$R *.dfm}
 
 procedure TForm2.Button1Click(Sender: TObject);
 begin
   If Not Assigned(WebChart) Then
-    WebChart := TWebCharts.Create;
-  WebChart
-    .NewProject
-    .Charts
-      ._ChartType(line)
-        .Attributes
-          .Name('FUNE')
-          .ColSpan(12)
-          .DataSet
-            .DataSet(FDQuery1)
-            .LabelName('DATA_HORA')
-            .ValueName('MEDICAO')
-            .RGBName('RGB')
-          .&End
-        .&End
-      .&End
-    .&End
-  .WebBrowser(WebBrowser1)
-  .Generated;
+    WebChart := TWebCharts.create;
+  WebChart.NewProject.Charts._ChartType(line).Attributes.Name('FUNE')
+    .ColSpan(12).DataSet.DataSet(FDQuery1).LabelName('DATA_HORA')
+    .ValueName('MEDICAO').RGBName('RGB').&End.&End.&End.&End.WebBrowser
+    (WebBrowser1).Generated;
 end;
 
 constructor TForm2.create;
 begin
-//  WebChart := TWebCharts.create;
+  // WebChart := TWebCharts.create;
+end;
+
+procedure TForm2.FormCreate(Sender: TObject);
+begin
+  FrmUnidades := TFrmUnidades.create(Nil);
+  Try
+    FrmUnidades.ShowModal;
+  Finally
+    FreeAndNil(FrmUnidades);
+  End;
 end;
 
 end.

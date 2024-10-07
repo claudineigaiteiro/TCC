@@ -20,7 +20,9 @@ uses
   services.pluviometro in 'src\services\services.pluviometro.pas',
   Routers.Imagem in 'src\routers\Routers.Imagem.pas',
   Controlers.Imagens in 'src\Controlers\Controlers.Imagens.pas',
-  Services.Imagens in 'src\services\Services.Imagens.pas';
+  Services.Imagens in 'src\services\Services.Imagens.pas',
+  Services.Unidades in 'src\services\Services.Unidades.pas',
+  Controlers.Unidades in 'src\Controlers\Controlers.Unidades.pas';
 
 begin
   dmConecxao := TdmConecxao.Create(nil);

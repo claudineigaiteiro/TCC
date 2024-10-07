@@ -131,6 +131,15 @@
             <Form>Form2</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="UnFrmUnidades.pas">
+            <Form>FrmUnidades</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="UnDmConecxao.pas">
+            <Form>DmConecxao</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

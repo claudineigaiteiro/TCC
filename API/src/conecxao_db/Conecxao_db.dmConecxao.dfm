@@ -44,4 +44,29 @@ object dmConecxao: TdmConecxao
       Size = 2
     end
   end
+  object FdqUnidade: TFDQuery
+    Active = True
+    Connection = FdConecxao
+    SQL.Strings = (
+      'SELECT *'
+      '  FROM ANEOMETRO')
+    Left = 144
+    Top = 88
+    object IntegerField1: TIntegerField
+      FieldName = 'ID'
+      KeyFields = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+    end
+    object SQLTimeStampField1: TSQLTimeStampField
+      FieldName = 'DATA_HORA'
+      Origin = 'DATA_HORA'
+    end
+    object FMTBCDField1: TFMTBCDField
+      FieldName = 'VELOCIDADE'
+      Origin = 'VELOCIDADE'
+      Precision = 18
+      Size = 2
+    end
+  end
 end
