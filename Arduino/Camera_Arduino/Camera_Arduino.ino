@@ -29,6 +29,7 @@
 //const char* password = "ap4042022rv";
 const char* ssid = "Auri mayolo";
 const char* password = "auri2019";
+const char* chave = "{6F8111FF-45B9-4971-BF38-61310B11D9B5}";
 
 void sendImageToServer() {
   // Captura uma foto
@@ -42,12 +43,12 @@ void sendImageToServer() {
   String imageBase64 = base64::encode(fb->buf, fb->len);
 
   // Cria o JSON com a imagem em base64
-  String json = "{\"image\": \"" + imageBase64 + "\"}";
+  String json = "{\"imagem\": \"" + imageBase64 + "\", \"chave\": \"" + chave + "\"}";
 
   // Faz o POST para o servidor
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-    http.begin("http://192.168.0.106:9000/imagem");
+    http.begin("http://192.168.0.105:9000/imagens");
     http.addHeader("Content-Type", "application/json");
 
     int httpResponseCode = http.POST(json);
