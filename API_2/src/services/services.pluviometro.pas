@@ -1,4 +1,4 @@
-unit services.aneometro;
+unit services.pluviometro;
 
 interface
 
@@ -11,35 +11,36 @@ uses
   FireDAC.DApt, FireDAC.Comp.DataSet, System.JSON;
 
 type
-  Tservices_aneometro = class(TdmConecxao)
-    qryAneometro: TFDQuery;
-    qryAneometroID: TIntegerField;
-    qryAneometroVELOCIDADE: TFMTBCDField;
-    qryAneometroID_UNIDADE: TIntegerField;
+  Tservices_pluviometro = class(TdmConecxao)
+    qryPluviometro: TFDQuery;
+    qryPluviometroID: TIntegerField;
+    qryPluviometroMEDICAO: TFMTBCDField;
+    qryPluviometroID_UNIDADE: TIntegerField;
     qryUnidade: TFDQuery;
   private
     { Private declarations }
   public
     { Public declarations }
-    function Insert(const AAneometro: TJSONObject): TFDQuery;
+    function Insert(const APluviometro: TJSONObject): TFDQuery;
   end;
 
 var
-  services_aneometro: Tservices_aneometro;
+  services_pluviometro: Tservices_pluviometro;
 
 implementation
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 {$R *.dfm}
-{ Tservices_aneometro }
 
 uses DataSet.Serialize;
 
-function Tservices_aneometro.Insert(const AAneometro: TJSONObject): TFDQuery;
+{ TdmConecxao1 }
+
+function Tservices_pluviometro.Insert(const APluviometro: TJSONObject): TFDQuery;
 var
   LUnidade: String;
 begin
-  LUnidade := AAneometro.get('chave').JsonValue.ToString;
+  LUnidade := APluviometro.get('chave').JsonValue.ToString;
   LUnidade := Copy(LUnidade, 2, Length(LUnidade) - 2);
 
   qryUnidade.SQL.Add('WHERE UNIDADES.CHAVE = ''' + LUnidade + '''');
@@ -47,13 +48,13 @@ begin
 
   If qryUnidade.RecordCount > 0 then
   begin
-    AAneometro.RemovePair('chave');
-    AAneometro.AddPair('ID_UNIDADE', qryUnidade.FieldByName('ID').Text);
+    APluviometro.RemovePair('chave');
+    APluviometro.AddPair('ID_UNIDADE', qryUnidade.FieldByName('ID').Text);
 
-    Result := qryAneometro;
-    qryAneometro.SQL.Add('WHERE 1 <> 1');
-    qryAneometro.Open();
-    qryAneometro.LoadFromJSON(AAneometro, False);
+    Result := qryPluviometro;
+    qryPluviometro.SQL.Add('WHERE 1 <> 1');
+    qryPluviometro.Open();
+    qryPluviometro.LoadFromJSON(APluviometro, False);
   end
 end;
 
