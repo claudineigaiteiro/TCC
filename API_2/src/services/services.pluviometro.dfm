@@ -26,6 +26,11 @@ inherited services_pluviometro: Tservices_pluviometro
       FieldName = 'ID_UNIDADE'
       Origin = 'ID_UNIDADE'
     end
+    object qryPluviometroDATA_HORA: TSQLTimeStampField
+      FieldName = 'DATA_HORA'
+      Origin = 'DATA_HORA'
+      ReadOnly = True
+    end
   end
   object qryUnidade: TFDQuery
     Active = True

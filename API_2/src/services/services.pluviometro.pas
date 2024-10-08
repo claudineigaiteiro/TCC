@@ -17,11 +17,13 @@ type
     qryPluviometroMEDICAO: TFMTBCDField;
     qryPluviometroID_UNIDADE: TIntegerField;
     qryUnidade: TFDQuery;
+    qryPluviometroDATA_HORA: TSQLTimeStampField;
   private
     { Private declarations }
   public
     { Public declarations }
     function Insert(const APluviometro: TJSONObject): TFDQuery;
+    function GetByDay(const AId: Int64; ADataInicio, ADataFim: TDate): TFDQuery;
   end;
 
 var
@@ -36,7 +38,42 @@ uses DataSet.Serialize;
 
 { TdmConecxao1 }
 
-function Tservices_pluviometro.Insert(const APluviometro: TJSONObject): TFDQuery;
+function Tservices_pluviometro.GetByDay(const AId: Int64;
+  ADataInicio, ADataFim: TDate): TFDQuery;
+Const
+  CSQL =
+    'WITH RECURSIVE CALENDARIO AS ( ' + #13 +
+    '   SELECT CAST(:data_inicio AS DATE) AS DATA ' + #13 +
+    '     FROM RDB$DATABASE ' + #13 +
+    '    UNION ALL' + #13 +
+    '   SELECT DATA + 1 ' + #13 +
+    '     FROM CALENDARIO ' + #13 +
+    '    WHERE DATA < :data_fim ' + #13 +
+    ')' + #13 +
+    'SELECT 0 AS ID, ' + #13 +
+    '       0 AS ID_UNIDADE, ' + #13 +
+    '       CAST(C.DATA AS TIMESTAMP) AS DATA_HORA, ' + #13 +
+    '       COALESCE(SUM(P.MEDICAO), 0) AS MEDICAO ' + #13 +
+    '  FROM CALENDARIO C ' + #13 +
+    '  LEFT JOIN PLUVIOMETRO P ON CAST(P.DATA_HORA AS DATE) = C.DATA ' + #13 +
+    '       AND P.ID_UNIDADE = :id ' + #13 +
+    ' GROUP BY C.DATA ' + #13 +
+    ' ORDER BY C.DATA ';
+
+begin
+  result := qryPluviometro;
+  qryPluviometro.SQL.Clear;;
+
+  qryPluviometro.SQL.Add(CSQL);
+
+  qryPluviometro.ParamByName('id').AsLargeInt := AId;
+  qryPluviometro.ParamByName('data_inicio').AsDate := ADataInicio;
+  qryPluviometro.ParamByName('data_fim').AsDate := ADataFim;
+  qryPluviometro.Open();
+end;
+
+function Tservices_pluviometro.Insert(const APluviometro: TJSONObject)
+  : TFDQuery;
 var
   LUnidade: String;
 begin
