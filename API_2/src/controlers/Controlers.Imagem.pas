@@ -8,7 +8,7 @@ implementation
 
 uses Horse, services.imagem, System.JSON, DataSet.Serialize;
 
-procedure SalvarAneometro(Req: THorseRequest; Res: THorseResponse; Proc: TProc);
+procedure SalvarImagem(Req: THorseRequest; Res: THorseResponse; Proc: TProc);
 var
   LService: Tservices_imagem;
 begin
@@ -22,7 +22,7 @@ end;
 
 procedure Registry;
 begin
-  THorse.Post('/imagens', SalvarAneometro);
+  THorse.Post('/imagens', SalvarImagem);
 end;
 
 end.
