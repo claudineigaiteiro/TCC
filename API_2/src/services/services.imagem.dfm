@@ -23,6 +23,11 @@ inherited services_imagem: Tservices_imagem
       FieldName = 'ID_UNIDADE'
       Origin = 'ID_UNIDADE'
     end
+    object qryImagemDATA: TSQLTimeStampField
+      FieldName = 'DATA'
+      Origin = '"DATA"'
+      ReadOnly = True
+    end
   end
   object qryUnidade: TFDQuery
     Active = True

@@ -22,7 +22,7 @@ begin
   end;
 end;
 
-procedure ObterPluviometro(Req: THorseRequest; Res: THorseResponse;
+procedure ObterPluviometroPeriodo(Req: THorseRequest; Res: THorseResponse;
   Proc: TProc);
 var
   LService: Tservices_pluviometro;
@@ -46,11 +46,11 @@ begin
     LAux := StringReplace(LAux, '.', '/', [rfReplaceAll]);
     LDataFim := StrToDate(LAux);
 
-    If LService.GetByDay(LIdAneometro, LDataInicio, LDataFim).IsEmpty then
+    If LService.GetByPeriodo(LIdAneometro, LDataInicio, LDataFim).IsEmpty then
       raise EHorseException.New.Status(THTTPStatus.NotFound)
         .Error('Registro não encontrado');
 
-    Res.Send<TJSONArray>(LService.GetByDay(LIdAneometro, LDataInicio, LDataFim)
+    Res.Send<TJSONArray>(LService.GetByPeriodo(LIdAneometro, LDataInicio, LDataFim)
       .ToJSONArray());
   finally
     LService.Free;
@@ -60,7 +60,7 @@ end;
 procedure Registry;
 begin
   THorse.Post('/pluviometros', SalvarAneometro);
-  THorse.Get('/pluviometros/:id/day', ObterPluviometro);
+  THorse.Get('/pluviometros/:id/periodo', ObterPluviometroPeriodo);
 end;
 
 end.

@@ -19,11 +19,13 @@ type
     qryImagemIMAGEM: TBlobField;
     qryImagemID_UNIDADE: TIntegerField;
     qryUnidadeID: TIntegerField;
+    qryImagemDATA: TSQLTimeStampField;
   private
     { Private declarations }
   public
     { Public declarations }
     function Insert(const AImagem: TJSONObject): TFDQuery;
+    function GetByPeriodo(const AId: Int64; ADataInicio, ADataFim: TDate): TFDQuery;
   end;
 
 var
@@ -37,6 +39,30 @@ implementation
 { TdmConecxao1 }
 
 Uses DataSet.Serialize;
+
+function Tservices_imagem.GetByPeriodo(const AId: Int64; ADataInicio,
+  ADataFim: TDate): TFDQuery;
+Const
+  CSQL =
+    'SELECT HISTORICO_IMAGENS.ID, ' + #13 +
+    '       HISTORICO_IMAGENS.DATA, ' + #13 +
+    '       HISTORICO_IMAGENS.IMAGEM, ' + #13 +
+    '       HISTORICO_IMAGENS.ID_UNIDADE ' + #13 +
+    '  FROM HISTORICO_IMAGENS ' + #13 +
+    ' WHERE HISTORICO_IMAGENS.ID_UNIDADE = :id' + #13 +
+    '   AND HISTORICO_IMAGENS.DATA BETWEEN :data_inicio AND :data_fim ';
+
+begin
+  result := qryImagem;
+  qryImagem.SQL.Clear;;
+
+  qryImagem.SQL.Add(CSQL);
+
+  qryImagem.ParamByName('id').AsLargeInt := AId;
+  qryImagem.ParamByName('data_inicio').AsDate := ADataInicio;
+  qryImagem.ParamByName('data_fim').AsDate := ADataFim;
+  qryImagem.Open();
+end;
 
 function Tservices_imagem.Insert(const AImagem: TJSONObject): TFDQuery;
 var

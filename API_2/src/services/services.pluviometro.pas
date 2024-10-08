@@ -23,7 +23,7 @@ type
   public
     { Public declarations }
     function Insert(const APluviometro: TJSONObject): TFDQuery;
-    function GetByDay(const AId: Int64; ADataInicio, ADataFim: TDate): TFDQuery;
+    function GetByPeriodo(const AId: Int64; ADataInicio, ADataFim: TDate): TFDQuery;
   end;
 
 var
@@ -38,7 +38,7 @@ uses DataSet.Serialize;
 
 { TdmConecxao1 }
 
-function Tservices_pluviometro.GetByDay(const AId: Int64;
+function Tservices_pluviometro.GetByPeriodo(const AId: Int64;
   ADataInicio, ADataFim: TDate): TFDQuery;
 Const
   CSQL =

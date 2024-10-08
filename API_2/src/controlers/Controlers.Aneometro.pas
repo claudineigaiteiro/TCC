@@ -22,7 +22,7 @@ begin
   end;
 end;
 
-procedure ObterAneometro(Req: THorseRequest; Res: THorseResponse; Proc: TProc);
+procedure ObterAneometroPeriodo(Req: THorseRequest; Res: THorseResponse; Proc: TProc);
 var
   LService: Tservices_aneometro;
   LIdAneometro: Int64;
@@ -45,11 +45,11 @@ begin
     LAux := StringReplace(LAux, '.', '/', [rfReplaceAll]);
     LDataFim := StrToDate(LAux);
 
-    If LService.GetByDay(LIdAneometro, LDataInicio, LDataFim).IsEmpty then
+    If LService.GetByPeriodo(LIdAneometro, LDataInicio, LDataFim).IsEmpty then
       raise EHorseException.New.Status(THTTPStatus.NotFound)
         .Error('Registro não encontrado');
 
-    Res.Send<TJSONArray>(LService.GetByDay(LIdAneometro, LDataInicio, LDataFim)
+    Res.Send<TJSONArray>(LService.GetByPeriodo(LIdAneometro, LDataInicio, LDataFim)
       .ToJSONArray());
   finally
     LService.Free;
@@ -59,7 +59,7 @@ end;
 procedure Registry;
 begin
   THorse.Post('/aneometros', SalvarAneometro);
-  THorse.Get('/aneometros/:id/day', ObterAneometro);
+  THorse.Get('/aneometros/:id/periodo', ObterAneometroPeriodo);
 end;
 
 end.

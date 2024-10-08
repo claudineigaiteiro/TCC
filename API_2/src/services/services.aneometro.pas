@@ -23,7 +23,7 @@ type
   public
     { Public declarations }
     function Insert(const AAneometro: TJSONObject): TFDQuery;
-    function GetByDay(const AId: Int64; ADataInicio, ADataFim: TDate): TFDQuery;
+    function GetByPeriodo(const AId: Int64; ADataInicio, ADataFim: TDate): TFDQuery;
   end;
 
 var
@@ -37,7 +37,7 @@ implementation
 
 uses DataSet.Serialize;
 
-function Tservices_aneometro.GetByDay(const AId: Int64; ADataInicio, ADataFim: TDate): TFDQuery;
+function Tservices_aneometro.GetByPeriodo(const AId: Int64; ADataInicio, ADataFim: TDate): TFDQuery;
 Const
   CSQL =
     'WITH RECURSIVE CALENDARIO AS ( ' + #13 +
