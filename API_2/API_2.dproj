@@ -106,6 +106,12 @@
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="src\controlers\Controlers.Pluviometro.pas"/>
+        <DCCReference Include="src\services\services.imagem.pas">
+            <Form>services_imagem</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="src\controlers\Controlers.Imagem.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
