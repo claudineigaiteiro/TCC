@@ -6,6 +6,7 @@ program API_2;
 uses
   Horse,
   Horse.Jhonson,
+  Horse.HandleException,
   providers.conecxaoDB
     in 'src\providers\providers.conecxaoDB.pas' {dmConecxao: TDataModule} ,
   services.aneometro
@@ -22,7 +23,10 @@ uses
   Controlers.unidade in 'src\controlers\Controlers.Unidade.pas';
 
 begin
-  THorse.Use(Jhonson());
+  THorse
+    .Use(Jhonson())
+    .Use(HandleException());
+
 
   Controlers.aneometro.Registry;
   Controlers.pluviometro.Registry;

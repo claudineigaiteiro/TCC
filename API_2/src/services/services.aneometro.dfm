@@ -2,10 +2,9 @@ inherited services_aneometro: Tservices_aneometro
   Height = 183
   Width = 263
   object qryAneometro: TFDQuery
-    Active = True
     Connection = fdConecxao
     SQL.Strings = (
-      'SELECT * '
+      'SELECT *'
       '  FROM ANEOMETRO')
     Left = 136
     Top = 24
@@ -25,6 +24,11 @@ inherited services_aneometro: Tservices_aneometro
     object qryAneometroID_UNIDADE: TIntegerField
       FieldName = 'ID_UNIDADE'
       Origin = 'ID_UNIDADE'
+    end
+    object qryAneometroDATA_HORA: TSQLTimeStampField
+      FieldName = 'DATA_HORA'
+      Origin = 'DATA_HORA'
+      ReadOnly = True
     end
   end
   object qryUnidade: TFDQuery
