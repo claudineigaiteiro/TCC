@@ -23,7 +23,10 @@ type
   public
     { Public declarations }
     function Insert(const AAneometro: TJSONObject): TFDQuery;
-    function GetByPeriodo(const AId: Int64; ADataInicio, ADataFim: TDate): TFDQuery;
+    function GetByPeriodo(const AId: Int64; ADataInicio, ADataFim: TDate)
+      : TFDQuery;
+    function GetByDia(const AId: Int64; AHoraInicio, AHoraFim: TDateTime)
+      : TFDQuery;
   end;
 
 var
@@ -37,29 +40,50 @@ implementation
 
 uses DataSet.Serialize;
 
-function Tservices_aneometro.GetByPeriodo(const AId: Int64; ADataInicio, ADataFim: TDate): TFDQuery;
+function Tservices_aneometro.GetByDia(const AId: Int64;
+  AHoraInicio, AHoraFim: TDateTime): TFDQuery;
+const
+  CSQL = 'WITH RECURSIVE HORAS AS ( ' + #13 +
+    '   SELECT CAST(:hora_inicio AS TIMESTAMP) AS DATA_HORA ' + #13 +
+    '     FROM RDB$DATABASE ' + #13 + '    UNION ALL ' + #13 +
+    '   SELECT DATEADD(1 HOUR TO DATA_HORA) ' + #13 + '     FROM HORAS ' + #13 +
+    '    WHERE DATA_HORA < CAST(:hora_fim AS TIMESTAMP) ' + #13 + ') ' + #13 +
+    'SELECT 0 AS ID, ' + #13 + '       H.DATA_HORA, ' + #13 +
+    '       COALESCE(AVG(A.VELOCIDADE), 0) AS VELOCIDADE, ' + #13 +
+    '       0 AS ID_UNIDADE ' + #13 + '  FROM HORAS H ' + #13 +
+    '  LEFT JOIN ANEOMETRO A ' + #13 +
+    '    ON A.DATA_HORA BETWEEN H.DATA_HORA AND DATEADD(1 HOUR TO H.DATA_HORA) '
+    + #13 + '       AND A.ID_UNIDADE = :id ' + #13 + ' GROUP BY H.DATA_HORA ' +
+    #13 + ' ORDER BY H.DATA_HORA ';
+
+begin
+  Result := qryAneometro;
+  qryAneometro.SQL.Clear;
+  qryAneometro.SQL.Add(CSQL);
+  qryAneometro.ParamByName('hora_inicio').AsDateTime := AHoraInicio;
+  qryAneometro.ParamByName('hora_fim').AsDateTime := AHoraFim;
+  qryAneometro.ParamByName('id').AsLargeInt := AId;
+  qryAneometro.Open();
+end;
+
+function Tservices_aneometro.GetByPeriodo(const AId: Int64;
+  ADataInicio, ADataFim: TDate): TFDQuery;
 Const
-  CSQL =
-    'WITH RECURSIVE CALENDARIO AS ( ' + #13 +
+  CSQL = 'WITH RECURSIVE CALENDARIO AS ( ' + #13 +
     '   SELECT CAST(:data_inicio AS DATE) AS DATA ' + #13 +
-    '     FROM RDB$DATABASE ' + #13 +
-    '    UNION ALL' + #13 +
-    '   SELECT DATA + 1 ' + #13 +
-    '     FROM CALENDARIO ' + #13 +
-    '    WHERE DATA < :data_fim ' + #13 +
-    ')' + #13 +
-    'SELECT 0 AS ID, ' + #13 +
+    '     FROM RDB$DATABASE ' + #13 + '    UNION ALL' + #13 +
+    '   SELECT DATA + 1 ' + #13 + '     FROM CALENDARIO ' + #13 +
+    '    WHERE DATA < :data_fim ' + #13 + ')' + #13 + 'SELECT 0 AS ID, ' + #13 +
     '       0 AS ID_UNIDADE, ' + #13 +
     '       CAST(C.DATA AS TIMESTAMP) AS DATA_HORA, ' + #13 +
     '       COALESCE(AVG(A.VELOCIDADE), 0) AS VELOCIDADE ' + #13 +
     '  FROM CALENDARIO C ' + #13 +
     '  LEFT JOIN ANEOMETRO A ON CAST(A.DATA_HORA AS DATE) = C.DATA ' + #13 +
-    '       AND A.ID_UNIDADE = :id ' + #13 +
-    ' GROUP BY C.DATA ' + #13 +
+    '       AND A.ID_UNIDADE = :id ' + #13 + ' GROUP BY C.DATA ' + #13 +
     ' ORDER BY C.DATA ';
 
 begin
-  result := qryAneometro;
+  Result := qryAneometro;
   qryAneometro.SQL.Clear;;
 
   qryAneometro.SQL.Add(CSQL);
@@ -85,10 +109,11 @@ begin
     AAneometro.RemovePair('chave');
     AAneometro.AddPair('ID_UNIDADE', qryUnidade.FieldByName('ID').Text);
 
-    result := qryAneometro;
+    Result := qryAneometro;
     qryAneometro.SQL.Add('WHERE 1 <> 1');
     qryAneometro.Open();
     qryAneometro.LoadFromJSON(AAneometro, False);
   end
 end;
+
 end.

@@ -56,10 +56,45 @@ begin
   end;
 end;
 
+procedure ObterAneometroDia(Req: THorseRequest; Res: THorseResponse; Proc: TProc);
+var
+  LService: Tservices_aneometro;
+  LIdUnidade: Int64;
+  LAux: String;
+  LJSON: TJSONObject;
+  LDataInicio, LDataFim: TDateTime;
+begin
+  LService := Tservices_aneometro.Create(nil);
+  try
+    LIdUnidade := Req.Params.Items['id'].ToInt64;
+
+    LJSON := TJSONObject.ParseJSONValue(Req.Body) As TJSONObject;
+    LAux := LJSON.Get('data').JsonValue.ToString;
+    LAux := copy(LAux, 2, Length(LAux) - 2);
+    //LDataInicio := LAux + ' 00:00';
+    //LDataFim := LAux + ' 23:00';
+    LAux := StringReplace(LAux, '.', '/', [rfReplaceAll]);
+    LDataInicio := StrToDate(LAux);
+    LDataFim := LDataInicio;
+    LDataInicio := LDataInicio + EncodeTime(0, 0, 0, 0);
+    LDataFim := LDataFim + EncodeTime(23, 59, 0, 0);
+
+    If LService.GetByDia(LIdUnidade, LDataInicio, LDataFim).IsEmpty then
+      raise EHorseException.New.Status(THTTPStatus.NotFound)
+        .Error('Registro não encontrado');
+
+    Res.Send<TJSONArray>(LService.GetByDia(LIdUnidade, LDataInicio, LDataFim)
+      .ToJSONArray());
+  finally
+    LService.Free;
+  end;
+end;
+
 procedure Registry;
 begin
   THorse.Post('/aneometros', SalvarAneometro);
   THorse.Get('/aneometros/:id/periodo', ObterAneometroPeriodo);
+  THorse.Get('/aneometros/:id/dia', ObterAneometroDia);
 end;
 
 end.
