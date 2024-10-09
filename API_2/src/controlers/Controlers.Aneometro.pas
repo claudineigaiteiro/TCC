@@ -25,14 +25,14 @@ end;
 procedure ObterAneometroPeriodo(Req: THorseRequest; Res: THorseResponse; Proc: TProc);
 var
   LService: Tservices_aneometro;
-  LIdAneometro: Int64;
+  LIdUnidade: Int64;
   LAux: String;
   LJSON: TJSONObject;
   LDataInicio, LDataFim: TDate;
 begin
   LService := Tservices_aneometro.Create(nil);
   try
-    LIdAneometro := Req.Params.Items['id'].ToInt64;
+    LIdUnidade := Req.Params.Items['id'].ToInt64;
 
     LJSON := TJSONObject.ParseJSONValue(Req.Body) As TJSONObject;
     LAux := LJSON.Get('data_inicio').JsonValue.ToString;
@@ -45,11 +45,11 @@ begin
     LAux := StringReplace(LAux, '.', '/', [rfReplaceAll]);
     LDataFim := StrToDate(LAux);
 
-    If LService.GetByPeriodo(LIdAneometro, LDataInicio, LDataFim).IsEmpty then
+    If LService.GetByPeriodo(LIdUnidade, LDataInicio, LDataFim).IsEmpty then
       raise EHorseException.New.Status(THTTPStatus.NotFound)
         .Error('Registro não encontrado');
 
-    Res.Send<TJSONArray>(LService.GetByPeriodo(LIdAneometro, LDataInicio, LDataFim)
+    Res.Send<TJSONArray>(LService.GetByPeriodo(LIdUnidade, LDataInicio, LDataFim)
       .ToJSONArray());
   finally
     LService.Free;

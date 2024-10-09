@@ -21,6 +21,8 @@ type
   public
     { Public declarations }
     function Insert(const AUnidade: TJSONObject): TFDQuery;
+    function GetAll: TFDQuery;
+    function GetByName(ANome: String): TFDQuery;
   end;
 
 var
@@ -35,10 +37,31 @@ uses DataSet.Serialize;
 
 { Tservices_unidade }
 
+function Tservices_unidade.GetAll: TFDQuery;
+begin
+  Result := qryUnidade;
+  qryUnidade.Open();
+end;
+
+function Tservices_unidade.GetByName(ANome: String): TFDQuery;
+const
+  CSQL =
+    'SELECT UNIDADES.ID, ' + #13 +
+    '       UNIDADES.NOME, ' + #13 +
+    '       UNIDADES.CHAVE ' + #13 + '  FROM UNIDADES ' + #13 +
+    ' WHERE UNIDADES.NOME CONTAINING :nome ';
+begin
+  Result := qryUnidade;
+  qryUnidade.sql.Clear;
+  qryUnidade.sql.Add(CSQL);
+  qryUnidade.ParamByName('nome').AsString := ANome;
+  qryUnidade.Open();
+end;
+
 function Tservices_unidade.Insert(const AUnidade: TJSONObject): TFDQuery;
 begin
   Result := qryUnidade;
-  qryUnidade.SQL.Add('WHERE 1 <> 1');
+  qryUnidade.sql.Add('WHERE 1 <> 1');
   qryUnidade.Open();
   qryUnidade.LoadFromJSON(AUnidade, False);
 end;
