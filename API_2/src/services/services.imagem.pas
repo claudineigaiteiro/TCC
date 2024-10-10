@@ -25,7 +25,9 @@ type
   public
     { Public declarations }
     function Insert(const AImagem: TJSONObject): TFDQuery;
-    function GetByPeriodo(const AId: Int64; ADataInicio, ADataFim: TDate): TFDQuery;
+    function GetByPeriodo(const AId: Int64; ADataInicio, ADataFim: TDate)
+      : TFDQuery;
+    function GetByDia(const AId: Int64; ADia: TDate): TFDQuery;
   end;
 
 var
@@ -35,25 +37,39 @@ implementation
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 {$R *.dfm}
-
 { TdmConecxao1 }
 
 Uses DataSet.Serialize;
 
-function Tservices_imagem.GetByPeriodo(const AId: Int64; ADataInicio,
-  ADataFim: TDate): TFDQuery;
+function Tservices_imagem.GetByDia(const AId: Int64; ADia: TDate): TFDQuery;
 Const
-  CSQL =
-    'SELECT HISTORICO_IMAGENS.ID, ' + #13 +
+  CSQL = 'SELECT HISTORICO_IMAGENS.ID, ' + #13 +
     '       HISTORICO_IMAGENS.DATA, ' + #13 +
     '       HISTORICO_IMAGENS.IMAGEM, ' + #13 +
-    '       HISTORICO_IMAGENS.ID_UNIDADE ' + #13 +
-    '  FROM HISTORICO_IMAGENS ' + #13 +
-    ' WHERE HISTORICO_IMAGENS.ID_UNIDADE = :id' + #13 +
+    '       HISTORICO_IMAGENS.ID_UNIDADE ' + #13 + '  FROM HISTORICO_IMAGENS ' +
+    #13 + ' WHERE HISTORICO_IMAGENS.ID_UNIDADE = :id' + #13 +
+    '   AND CAST(HISTORICO_IMAGENS.DATA AS DATE) = :dia ';
+begin
+  Result := qryImagem;
+  qryImagem.SQL.Clear;
+  qryImagem.SQL.Add(CSQL);
+  qryImagem.ParamByName('dia').AsDate := ADia;
+  qryImagem.ParamByName('id').AsLargeInt := AId;
+  qryImagem.Open();
+end;
+
+function Tservices_imagem.GetByPeriodo(const AId: Int64;
+  ADataInicio, ADataFim: TDate): TFDQuery;
+Const
+  CSQL = 'SELECT HISTORICO_IMAGENS.ID, ' + #13 +
+    '       HISTORICO_IMAGENS.DATA, ' + #13 +
+    '       HISTORICO_IMAGENS.IMAGEM, ' + #13 +
+    '       HISTORICO_IMAGENS.ID_UNIDADE ' + #13 + '  FROM HISTORICO_IMAGENS ' +
+    #13 + ' WHERE HISTORICO_IMAGENS.ID_UNIDADE = :id' + #13 +
     '   AND HISTORICO_IMAGENS.DATA BETWEEN :data_inicio AND :data_fim ';
 
 begin
-  result := qryImagem;
+  Result := qryImagem;
   qryImagem.SQL.Clear;;
 
   qryImagem.SQL.Add(CSQL);

@@ -22,7 +22,8 @@ begin
   end;
 end;
 
-procedure ObterAneometroPeriodo(Req: THorseRequest; Res: THorseResponse; Proc: TProc);
+procedure ObterAneometroPeriodo(Req: THorseRequest; Res: THorseResponse;
+  Proc: TProc);
 var
   LService: Tservices_aneometro;
   LIdUnidade: Int64;
@@ -49,14 +50,15 @@ begin
       raise EHorseException.New.Status(THTTPStatus.NotFound)
         .Error('Registro não encontrado');
 
-    Res.Send<TJSONArray>(LService.GetByPeriodo(LIdUnidade, LDataInicio, LDataFim)
-      .ToJSONArray());
+    Res.Send<TJSONArray>(LService.GetByPeriodo(LIdUnidade, LDataInicio,
+      LDataFim).ToJSONArray());
   finally
     LService.Free;
   end;
 end;
 
-procedure ObterAneometroDia(Req: THorseRequest; Res: THorseResponse; Proc: TProc);
+procedure ObterAneometroDia(Req: THorseRequest; Res: THorseResponse;
+  Proc: TProc);
 var
   LService: Tservices_aneometro;
   LIdUnidade: Int64;
@@ -71,8 +73,6 @@ begin
     LJSON := TJSONObject.ParseJSONValue(Req.Body) As TJSONObject;
     LAux := LJSON.Get('data').JsonValue.ToString;
     LAux := copy(LAux, 2, Length(LAux) - 2);
-    //LDataInicio := LAux + ' 00:00';
-    //LDataFim := LAux + ' 23:00';
     LAux := StringReplace(LAux, '.', '/', [rfReplaceAll]);
     LDataInicio := StrToDate(LAux);
     LDataFim := LDataInicio;
