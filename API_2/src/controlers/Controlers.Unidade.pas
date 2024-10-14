@@ -113,7 +113,7 @@ begin
     if LService.GetById(LIdUnidade).IsEmpty then
       raise EHorseException.New.Status(THTTPStatus.NotFound)
         .Error('Registro não encontrado');
-    if LService.Delete then
+    if LService.Update(Req.Body<TJSONObject>) then
       Res.Status(THTTPStatus.NoContent);
 
   finally
