@@ -31,6 +31,8 @@ object Form2: TForm2
       Height = 360
       Align = alClient
       TabOrder = 0
+      ExplicitLeft = 2
+      ExplicitTop = 2
       ControlData = {
         4C00000049400000352500000000000000000000000000000000000000000000
         000000004C000000000000000000000001000000E0D057007335CF11AE690800
@@ -51,7 +53,7 @@ object Form2: TForm2
   end
   object FDConnection1: TFDConnection
     Params.Strings = (
-      'Database=D:\Projetos\TCC\API\DB\ESTACAO_MET.fdb'
+      'Database=D:\Projetos\TCC\DB\ESTACAO_MET.FDB'
       'User_Name=SYSDBA'
       'Password=masterkey'
       'Port=3050'

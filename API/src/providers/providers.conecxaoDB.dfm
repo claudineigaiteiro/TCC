@@ -3,7 +3,7 @@ object dmConecxao: TdmConecxao
   Width = 146
   object fdConecxao: TFDConnection
     Params.Strings = (
-      'Database=D:\Projetos\TCC\API\DB\ESTACAO_MET.FDB'
+      'Database=D:\Projetos\TCC\DB\ESTACAO_MET.FDB'
       'User_Name=SYSDBA'
       'Password=masterkey'
       'Port=3050'

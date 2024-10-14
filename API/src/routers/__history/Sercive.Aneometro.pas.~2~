@@ -1,9 +1,0 @@
-unit Sercive.Aneometro;
-
-Horse, Horse.Jhonson, Horse.CORS,
-
-  interface
-
-  implementation
-
-end.

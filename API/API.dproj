@@ -1,8 +1,8 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{16201627-F13D-4DAC-BBDA-3A8C2B5422D4}</ProjectGuid>
+        <ProjectGuid>{1E2A1B6E-1507-4BC2-A8C6-A7B52DD71F4F}</ProjectGuid>
         <ProjectVersion>20.1</ProjectVersion>
-        <FrameworkType>VCL</FrameworkType>
+        <FrameworkType>None</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
@@ -48,9 +48,9 @@
         <DCC_S>false</DCC_S>
         <DCC_F>false</DCC_F>
         <DCC_K>false</DCC_K>
-        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
+        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
         <SanitizedProjectName>API</SanitizedProjectName>
-        <DCC_UnitSearchPath>modules\.dcp;modules\.dcu;modules;modules\horse\src;modules\horse-cors\src;modules\jhonson\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>modules\.dcp;modules\.dcu;modules;modules\dataset-serialize\src;modules\handle-exception\src;modules\horse\src;modules\jhonson\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_UsePackage>vclwinx;fmx;vclie;DbxCommonDriver;bindengine;IndyIPCommon;VCLRESTComponents;FireDACCommonODBC;FireDACCommonDriver;appanalytics;IndyProtocols;vclx;Skia.Package.RTL;IndyIPClient;dbxcds;vcledge;bindcompvclwinx;bindcompfmx;inetdb;FireDACSqliteDriver;DbxClientDriver;soapmidas;vclactnband;fmxFireDAC;dbexpress;DBXMySQLDriver;VclSmp;inet;vcltouch;fmxase;dbrtl;Skia.Package.FMX;fmxdae;FireDACMSAccDriver;CustomIPTransport;vcldsnap;DBXInterBaseDriver;IndySystem;Skia.Package.VCL;vcldb;vclFireDAC;bindcomp;FireDACCommon;IndyCore;RESTBackendComponents;bindcompdbx;rtl;FireDACMySQLDriver;FireDACADSDriver;RESTComponents;DBXSqliteDriver;vcl;IndyIPServer;dsnapxml;dsnapcon;adortl;vclimg;FireDACPgDriver;FireDAC;inetdbxpress;xmlrtl;tethering;bindcompvcl;dsnap;CloudService;fmxobj;bindcompvclsmp;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
@@ -91,23 +91,30 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="src\routers\Routers.Aneometro.pas"/>
-        <DCCReference Include="src\Register.pas"/>
-        <DCCReference Include="src\Controlers\Controlers.Aneometro.pas"/>
-        <DCCReference Include="src\services\services.aneometro.pas"/>
-        <DCCReference Include="src\conecxao_db\Conecxao_db.dmConecxao.pas">
+        <DCCReference Include="src\providers\providers.conecxaoDB.pas">
             <Form>dmConecxao</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="src\routers\Routers.Pluviometro.pas"/>
-        <DCCReference Include="src\Controlers\Controlers.Pluviometro.pas"/>
-        <DCCReference Include="src\services\services.pluviometro.pas"/>
-        <DCCReference Include="src\routers\Routers.Imagem.pas"/>
-        <DCCReference Include="src\Controlers\Controlers.Imagens.pas"/>
-        <DCCReference Include="src\services\Services.Imagens.pas"/>
-        <DCCReference Include="src\services\Services.Unidades.pas"/>
-        <DCCReference Include="src\Controlers\Controlers.Unidades.pas"/>
+        <DCCReference Include="src\services\services.aneometro.pas">
+            <Form>services_aneometro</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="src\controlers\Controlers.Aneometro.pas"/>
+        <DCCReference Include="src\services\services.pluviometro.pas">
+            <Form>services_pluviometro</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="src\controlers\Controlers.Pluviometro.pas"/>
+        <DCCReference Include="src\services\services.imagem.pas">
+            <Form>services_imagem</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="src\controlers\Controlers.Imagem.pas"/>
+        <DCCReference Include="src\services\services.unidade.pas">
+            <Form>services_unidade</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="src\controlers\Controlers.Unidade.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -1106,7 +1113,6 @@
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">False</Platform>
             </Platforms>
-            <ModelSupport>False</ModelSupport>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>
