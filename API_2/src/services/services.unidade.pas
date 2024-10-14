@@ -25,6 +25,8 @@ type
     function GetAll: TFDQuery;
     function GetByName(ANome: String): TFDQuery;
     function GetByCodigo(ACodigo: String): TFDQuery;
+    function GetById(AId: Int64): TFDQuery;
+    function Delete: Boolean;
   end;
 
 var
@@ -39,6 +41,12 @@ uses DataSet.Serialize;
 
 { Tservices_unidade }
 
+function Tservices_unidade.Delete: Boolean;
+begin
+  qryUnidade.Delete;
+  Result := qryUnidade.IsEmpty;
+end;
+
 function Tservices_unidade.GetAll: TFDQuery;
 begin
   Result := qryUnidade;
@@ -47,12 +55,9 @@ end;
 
 function Tservices_unidade.GetByCodigo(ACodigo: String): TFDQuery;
 const
-  CSQL =
-    'SELECT UNIDADES.ID, ' + #13 +
-    '       UNIDADES.CODIGO, ' + #13 +
-    '       UNIDADES.NOME, ' + #13 +
-    '       UNIDADES.CHAVE ' + #13 + '  FROM UNIDADES ' + #13 +
-    ' WHERE UNIDADES.CODIGO CONTAINING :codigo ';
+  CSQL = 'SELECT UNIDADES.ID, ' + #13 + '       UNIDADES.CODIGO, ' + #13 +
+    '       UNIDADES.NOME, ' + #13 + '       UNIDADES.CHAVE ' + #13 +
+    '  FROM UNIDADES ' + #13 + ' WHERE UNIDADES.CODIGO CONTAINING :codigo ';
 begin
   Result := qryUnidade;
   qryUnidade.sql.Clear;
@@ -61,14 +66,24 @@ begin
   qryUnidade.Open();
 end;
 
+function Tservices_unidade.GetById(AId: Int64): TFDQuery;
+const
+  CSQL = 'SELECT UNIDADES.ID, ' + #13 + '       UNIDADES.CODIGO, ' + #13 +
+    '       UNIDADES.NOME, ' + #13 + '       UNIDADES.CHAVE ' + #13 +
+    '  FROM UNIDADES ' + #13 + ' WHERE UNIDADES.ID = :id ';
+begin
+  Result := qryUnidade;
+  qryUnidade.sql.Clear;
+  qryUnidade.sql.Add(CSQL);
+  qryUnidade.ParamByName('id').AsLargeInt := AId;
+  qryUnidade.Open();
+end;
+
 function Tservices_unidade.GetByName(ANome: String): TFDQuery;
 const
-  CSQL =
-    'SELECT UNIDADES.ID, ' + #13 +
-    '       UNIDADES.CODIGO, ' + #13 +
-    '       UNIDADES.NOME, ' + #13 +
-    '       UNIDADES.CHAVE ' + #13 + '  FROM UNIDADES ' + #13 +
-    ' WHERE UNIDADES.NOME CONTAINING :nome ';
+  CSQL = 'SELECT UNIDADES.ID, ' + #13 + '       UNIDADES.CODIGO, ' + #13 +
+    '       UNIDADES.NOME, ' + #13 + '       UNIDADES.CHAVE ' + #13 +
+    '  FROM UNIDADES ' + #13 + ' WHERE UNIDADES.NOME CONTAINING :nome ';
 begin
   Result := qryUnidade;
   qryUnidade.sql.Clear;

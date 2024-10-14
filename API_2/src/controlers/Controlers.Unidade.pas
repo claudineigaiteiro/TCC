@@ -6,7 +6,7 @@ procedure Registry;
 
 implementation
 
-uses Horse, services.unidade, System.JSON, DataSet.Serialize;
+uses Horse, services.Unidade, System.JSON, DataSet.Serialize, System.SysUtils, Data.DB;
 
 procedure SalvarUnidade(Req: THorseRequest; Res: THorseResponse; Proc: TProc);
 var
@@ -14,13 +14,15 @@ var
 begin
   LService := Tservices_unidade.Create(nil);
   try
-    Res.Send<TJSONObject>(LService.Insert(Req.Body<TJSONObject>).ToJSONObject()).Status(THTTPStatus.Created);
+    Res.Send<TJSONObject>(LService.Insert(Req.Body<TJSONObject>).ToJSONObject())
+      .Status(THTTPStatus.Created);
   finally
     LService.Free;
   end;
 end;
 
-procedure ObterUnidadeNome(Req: THorseRequest; Res: THorseResponse; Proc: TProc);
+procedure ObterUnidadeNome(Req: THorseRequest; Res: THorseResponse;
+  Proc: TProc);
 var
   LService: Tservices_unidade;
   LNome: String;
@@ -58,7 +60,8 @@ begin
   end;
 end;
 
-procedure ObterUnidadeCodigo(Req: THorseRequest; Res: THorseResponse; Proc: TProc);
+procedure ObterUnidadeCodigo(Req: THorseRequest; Res: THorseResponse;
+  Proc: TProc);
 var
   LService: Tservices_unidade;
   LCodigo: String;
@@ -80,12 +83,32 @@ begin
   end;
 end;
 
+procedure DeletarUnidade(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var
+  LIdUnidade: Int64;
+  LService: Tservices_unidade;
+begin
+  LService := Tservices_unidade.Create(nil);
+  try
+    LIdUnidade := Req.Params.Items['id'].ToInt64;
+    if LService.GetById(LIdUnidade).IsEmpty then
+      raise EHorseException.New.Status(THTTPStatus.NotFound)
+        .Error('Registro não encontrado');
+    if LService.Delete then
+      Res.Status(THTTPStatus.NoContent);
+
+  finally
+    LService.Free;
+  end;
+end;
+
 procedure Registry;
 begin
   THorse.Post('/unidades', SalvarUnidade);
   THorse.Get('/unidades', ObterUnidade);
   THorse.Get('/unidades/nome', ObterUnidadeNome);
   THorse.Get('/unidades/codigo', ObterUnidadeCodigo);
+  THorse.Delete('/unidades/:id', DeletarUnidade);
 end;
 
 end.
