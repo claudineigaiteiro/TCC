@@ -6,6 +6,7 @@
 	"mainsrc": "src",
 	"projects": [],
 	"dependencies": {
+		"github.com/viniciussanchez/dataset-serialize": "^v2.5.9",
 		"github.com/viniciussanchez/restrequest4delphi": "^v4.0.19"
 	}
 }
