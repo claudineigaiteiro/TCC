@@ -9,7 +9,8 @@ uses
   Vcl.ComCtrls, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, Data.DB, FireDAC.Comp.DataSet,
-  FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids, Vcl.Mask, Vcl.DBCtrls;
+  FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids, Vcl.Mask, Vcl.DBCtrls,
+  FireDAC.Stan.Async, FireDAC.DApt;
 
 type
   TFrmUnidades = class(TForm)
@@ -40,6 +41,7 @@ type
     BtnSalvar: TButton;
     BtnNovo: TButton;
     BtnCancelar: TButton;
+    BtnExcluir: TButton;
     procedure BtnPesquisarUnidadeClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure RgFiltroPesquisaUnidadesClick(Sender: TObject);
@@ -47,6 +49,7 @@ type
     procedure BtnCancelarClick(Sender: TObject);
     procedure BtnNovoClick(Sender: TObject);
     procedure TsCadastroUnidadesExit(Sender: TObject);
+    procedure BtnExcluirClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -66,6 +69,20 @@ uses RESTRequest4D, DataSet.Serialize, System.JSON;
 procedure TFrmUnidades.BtnCancelarClick(Sender: TObject);
 begin
   mtUnidades.Cancel;
+  PgcUnidades.ActivePage := TsListagemUnidades;
+end;
+
+procedure TFrmUnidades.BtnExcluirClick(Sender: TObject);
+var
+  LResponse: IResponse;
+begin
+  LResponse := TRequest.New.BaseURL('http://localhost:9000')
+    .Resource('unidades').ResourceSuffix(mtUnidades.FieldByName('ID')
+    .AsString).Delete;
+
+  if LResponse.StatusCode = 204 then
+    mtUnidades.Delete;
+
   PgcUnidades.ActivePage := TsListagemUnidades;
 end;
 
@@ -160,6 +177,8 @@ procedure TFrmUnidades.RgFiltroPesquisaUnidadesClick(Sender: TObject);
 begin
   LblFiltroPesquisa.Caption := RgFiltroPesquisaUnidades.Items
     [RgFiltroPesquisaUnidades.ItemIndex] + ':';
+
+  EdtFiltroPesquisa.Text := EmptyStr;
 end;
 
 procedure TFrmUnidades.TsCadastroUnidadesExit(Sender: TObject);

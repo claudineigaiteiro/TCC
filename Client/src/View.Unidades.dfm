@@ -202,7 +202,7 @@ object FrmUnidades: TFrmUnidades
           TabOrder = 0
         end
         object BtnNovo: TButton
-          Left = 438
+          Left = 359
           Top = 14
           Width = 75
           Height = 25
@@ -212,7 +212,7 @@ object FrmUnidades: TFrmUnidades
           OnClick = BtnNovoClick
         end
         object BtnCancelar: TButton
-          Left = 350
+          Left = 275
           Top = 14
           Width = 75
           Height = 25
@@ -221,10 +221,21 @@ object FrmUnidades: TFrmUnidades
           TabOrder = 2
           OnClick = BtnCancelarClick
         end
+        object BtnExcluir: TButton
+          Left = 442
+          Top = 14
+          Width = 75
+          Height = 25
+          Anchors = [akTop, akRight]
+          Caption = 'Excluir'
+          TabOrder = 3
+          OnClick = BtnExcluirClick
+        end
       end
     end
   end
   object dsUnidades: TDataSource
+    AutoEdit = False
     DataSet = mtUnidades
     Left = 544
     Top = 216
@@ -241,7 +252,6 @@ object FrmUnidades: TFrmUnidades
     Top = 304
     object mtUnidadesID: TLargeintField
       FieldName = 'ID'
-      ReadOnly = True
     end
     object mtUnidadesNOME: TStringField
       FieldName = 'NOME'
