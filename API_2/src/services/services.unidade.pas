@@ -16,6 +16,7 @@ type
     qryUnidadeID: TIntegerField;
     qryUnidadeNOME: TStringField;
     qryUnidadeCHAVE: TStringField;
+    qryUnidadeCODIGO: TStringField;
   private
     { Private declarations }
   public
@@ -23,6 +24,7 @@ type
     function Insert(const AUnidade: TJSONObject): TFDQuery;
     function GetAll: TFDQuery;
     function GetByName(ANome: String): TFDQuery;
+    function GetByCodigo(ACodigo: String): TFDQuery;
   end;
 
 var
@@ -43,10 +45,27 @@ begin
   qryUnidade.Open();
 end;
 
+function Tservices_unidade.GetByCodigo(ACodigo: String): TFDQuery;
+const
+  CSQL =
+    'SELECT UNIDADES.ID, ' + #13 +
+    '       UNIDADES.CODIGO, ' + #13 +
+    '       UNIDADES.NOME, ' + #13 +
+    '       UNIDADES.CHAVE ' + #13 + '  FROM UNIDADES ' + #13 +
+    ' WHERE UNIDADES.CODIGO CONTAINING :codigo ';
+begin
+  Result := qryUnidade;
+  qryUnidade.sql.Clear;
+  qryUnidade.sql.Add(CSQL);
+  qryUnidade.ParamByName('codigo').AsString := ACodigo;
+  qryUnidade.Open();
+end;
+
 function Tservices_unidade.GetByName(ANome: String): TFDQuery;
 const
   CSQL =
     'SELECT UNIDADES.ID, ' + #13 +
+    '       UNIDADES.CODIGO, ' + #13 +
     '       UNIDADES.NOME, ' + #13 +
     '       UNIDADES.CHAVE ' + #13 + '  FROM UNIDADES ' + #13 +
     ' WHERE UNIDADES.NOME CONTAINING :nome ';

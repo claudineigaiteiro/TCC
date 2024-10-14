@@ -25,5 +25,11 @@ inherited services_unidade: Tservices_unidade
       Origin = 'CHAVE'
       Size = 100
     end
+    object qryUnidadeCODIGO: TStringField
+      FieldName = 'CODIGO'
+      Origin = 'CODIGO'
+      Required = True
+      Size = 10
+    end
   end
 end
