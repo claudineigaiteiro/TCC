@@ -2,7 +2,7 @@ object FrmUnidades: TFrmUnidades
   Left = 0
   Top = 0
   Caption = 'Unidades'
-  ClientHeight = 441
+  ClientHeight = 527
   ClientWidth = 624
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -16,10 +16,11 @@ object FrmUnidades: TFrmUnidades
     Left = 0
     Top = 0
     Width = 624
-    Height = 441
-    ActivePage = TsCadastroUnidades
+    Height = 527
+    ActivePage = TsListagemUnidades
     Align = alClient
     TabOrder = 0
+    ExplicitHeight = 441
     object TsListagemUnidades: TTabSheet
       Caption = 'Listagem'
       object PnlPesquisaUnidades: TPanel
@@ -51,7 +52,7 @@ object FrmUnidades: TFrmUnidades
           TabOrder = 0
           OnClick = RgFiltroPesquisaUnidadesClick
         end
-        object Edit1: TEdit
+        object EdtFiltroPesquisa: TEdit
           Left = 104
           Top = 29
           Width = 497
@@ -74,15 +75,17 @@ object FrmUnidades: TFrmUnidades
         Left = 0
         Top = 97
         Width = 616
-        Height = 314
+        Height = 351
         Align = alClient
         DataSource = dsUnidades
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
         TabOrder = 1
         TitleFont.Charset = DEFAULT_CHARSET
         TitleFont.Color = clWindowText
         TitleFont.Height = -12
         TitleFont.Name = 'Segoe UI'
         TitleFont.Style = []
+        OnCellClick = dgUnidadesCellClick
         Columns = <
           item
             Expanded = False
@@ -100,13 +103,34 @@ object FrmUnidades: TFrmUnidades
             Visible = True
           end>
       end
+      object pnlFoodListagem: TPanel
+        Left = 0
+        Top = 448
+        Width = 616
+        Height = 49
+        Align = alBottom
+        TabOrder = 2
+        DesignSize = (
+          616
+          49)
+        object btnEntrar: TButton
+          Left = 526
+          Top = 13
+          Width = 75
+          Height = 25
+          Anchors = [akTop, akRight]
+          Caption = 'Entrar'
+          TabOrder = 0
+        end
+      end
     end
     object TsCadastroUnidades: TTabSheet
       Caption = 'Cadastro'
       ImageIndex = 1
+      OnExit = TsCadastroUnidadesExit
       DesignSize = (
         616
-        411)
+        497)
       object LbUnidadeCadastroNome: TLabel
         Left = 16
         Top = 70
@@ -156,6 +180,47 @@ object FrmUnidades: TFrmUnidades
         DataField = 'CODIGO'
         DataSource = dsUnidades
         TabOrder = 2
+      end
+      object PnlFoodCadastro: TPanel
+        Left = 0
+        Top = 448
+        Width = 616
+        Height = 49
+        Align = alBottom
+        TabOrder = 3
+        ExplicitTop = 440
+        DesignSize = (
+          616
+          49)
+        object BtnSalvar: TButton
+          Left = 526
+          Top = 14
+          Width = 75
+          Height = 25
+          Anchors = [akTop, akRight]
+          Caption = 'Salvar'
+          TabOrder = 0
+        end
+        object BtnNovo: TButton
+          Left = 438
+          Top = 14
+          Width = 75
+          Height = 25
+          Anchors = [akTop, akRight]
+          Caption = 'Novo'
+          TabOrder = 1
+          OnClick = BtnNovoClick
+        end
+        object BtnCancelar: TButton
+          Left = 350
+          Top = 14
+          Width = 75
+          Height = 25
+          Anchors = [akTop, akRight]
+          Caption = 'Cancelar'
+          TabOrder = 2
+          OnClick = BtnCancelarClick
+        end
       end
     end
   end

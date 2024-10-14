@@ -18,7 +18,7 @@ type
     PnlPesquisaUnidades: TPanel;
     LblFiltroPesquisa: TLabel;
     RgFiltroPesquisaUnidades: TRadioGroup;
-    Edit1: TEdit;
+    EdtFiltroPesquisa: TEdit;
     BtnPesquisarUnidade: TButton;
     TsCadastroUnidades: TTabSheet;
     dsUnidades: TDataSource;
@@ -34,9 +34,19 @@ type
     edtCadastroChave: TDBEdit;
     LblCadastroCodigo: TLabel;
     EdtCadastroCodigo: TDBEdit;
+    pnlFoodListagem: TPanel;
+    btnEntrar: TButton;
+    PnlFoodCadastro: TPanel;
+    BtnSalvar: TButton;
+    BtnNovo: TButton;
+    BtnCancelar: TButton;
     procedure BtnPesquisarUnidadeClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure RgFiltroPesquisaUnidadesClick(Sender: TObject);
+    procedure dgUnidadesCellClick(Column: TColumn);
+    procedure BtnCancelarClick(Sender: TObject);
+    procedure BtnNovoClick(Sender: TObject);
+    procedure TsCadastroUnidadesExit(Sender: TObject);
   private
     { Private declarations }
   public
@@ -53,20 +63,60 @@ implementation
 
 uses RESTRequest4D, DataSet.Serialize, System.JSON;
 
+procedure TFrmUnidades.BtnCancelarClick(Sender: TObject);
+begin
+  mtUnidades.Cancel;
+  PgcUnidades.ActivePage := TsListagemUnidades;
+end;
+
+procedure TFrmUnidades.BtnNovoClick(Sender: TObject);
+begin
+  mtUnidades.Insert;
+end;
+
 procedure TFrmUnidades.BtnPesquisarUnidadeClick(Sender: TObject);
+const
+  CRecursoAll = 'unidades';
+  CRecursoNome = 'unidades/nome';
+  CRecursoCodigo = 'unidades/codigo';
 var
   LResponse: IResponse;
   LJsonStream: TStringStream;
+  LRecurso: String;
+  LJSON: TJSONObject;
 begin
-  LResponse := TRequest.New.BaseURL('http://localhost:9000')
-    .Resource('unidades').Accept('application/json').Get;
+  if EdtFiltroPesquisa.Text = EmptyStr then
+  begin
+    LRecurso := CRecursoAll;
+  end
+  else if RgFiltroPesquisaUnidades.ItemIndex = 0 then
+  begin
+    LRecurso := CRecursoNome;
+    LJSON := TJSONObject.Create;
+    LJSON.AddPair('nome', EdtFiltroPesquisa.Text);
+  end
+  else if RgFiltroPesquisaUnidades.ItemIndex = 1 then
+  begin
+    LRecurso := CRecursoCodigo;
+    LJSON := TJSONObject.Create;
+    LJSON.AddPair('codigo', EdtFiltroPesquisa.Text);
+  end;
+
+  if Assigned(LJSON) then
+  begin
+    LResponse := TRequest.New.BaseURL('http://localhost:9000')
+      .Resource(LRecurso).AddBody(LJSON).Accept('application/json').Get;
+  end
+  else
+  Begin
+    LResponse := TRequest.New.BaseURL('http://localhost:9000')
+      .Resource(LRecurso).Accept('application/json').Get;
+  End;
 
   if LResponse.StatusCode = 200 then
   begin
-    // Se a resposta for válida, use o conteúdo JSON
     LJsonStream := TStringStream.Create(LResponse.Content);
     try
-      // Limpa o TFDMemTable e carrega o JSON
       mtUnidades.Close;
       mtUnidades.LoadFromJSON(LJsonStream.DataString);
       mtUnidades.Open;
@@ -76,11 +126,18 @@ begin
   end;
 end;
 
+procedure TFrmUnidades.dgUnidadesCellClick(Column: TColumn);
+begin
+  PgcUnidades.ActivePage := TsCadastroUnidades;
+end;
+
 procedure TFrmUnidades.FormCreate(Sender: TObject);
 var
   LResponse: IResponse;
   LJsonStream: TStringStream;
 begin
+  ReportMemoryLeaksOnShutdown := True;
+
   LResponse := TRequest.New.BaseURL('http://localhost:9000')
     .Resource('unidades').Accept('application/json').Get;
 
@@ -103,6 +160,11 @@ procedure TFrmUnidades.RgFiltroPesquisaUnidadesClick(Sender: TObject);
 begin
   LblFiltroPesquisa.Caption := RgFiltroPesquisaUnidades.Items
     [RgFiltroPesquisaUnidades.ItemIndex] + ':';
+end;
+
+procedure TFrmUnidades.TsCadastroUnidadesExit(Sender: TObject);
+begin
+  mtUnidades.Cancel;
 end;
 
 end.
