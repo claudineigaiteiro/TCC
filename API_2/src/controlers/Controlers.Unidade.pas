@@ -102,6 +102,25 @@ begin
   end;
 end;
 
+procedure AlterarUnidade(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var
+  LIdUnidade: Int64;
+  LService: Tservices_unidade;
+begin
+  LService := Tservices_unidade.Create(nil);
+  try
+    LIdUnidade := Req.Params.Items['id'].ToInt64;
+    if LService.GetById(LIdUnidade).IsEmpty then
+      raise EHorseException.New.Status(THTTPStatus.NotFound)
+        .Error('Registro não encontrado');
+    if LService.Delete then
+      Res.Status(THTTPStatus.NoContent);
+
+  finally
+    LService.Free;
+  end;
+end;
+
 procedure Registry;
 begin
   THorse.Post('/unidades', SalvarUnidade);
@@ -109,6 +128,7 @@ begin
   THorse.Get('/unidades/nome', ObterUnidadeNome);
   THorse.Get('/unidades/codigo', ObterUnidadeCodigo);
   THorse.Delete('/unidades/:id', DeletarUnidade);
+  THorse.Put('/unidades/:id', AlterarUnidade);
 end;
 
 end.

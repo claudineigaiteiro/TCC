@@ -27,6 +27,7 @@ type
     function GetByCodigo(ACodigo: String): TFDQuery;
     function GetById(AId: Int64): TFDQuery;
     function Delete: Boolean;
+    function Update(AUnidade: TJSONObject): Boolean;
   end;
 
 var
@@ -98,6 +99,13 @@ begin
   qryUnidade.sql.Add('WHERE 1 <> 1');
   qryUnidade.Open();
   qryUnidade.LoadFromJSON(AUnidade, False);
+end;
+
+function Tservices_unidade.Update(AUnidade: TJSONObject): Boolean;
+begin
+  Result := False;
+  qryUnidade.MergeFromJSONObject(AUnidade, False);
+  Result := True;
 end;
 
 end.
