@@ -22,6 +22,9 @@ object FrmMenuInicial: TFrmMenuInicial
     Height = 33
     Align = alBottom
     TabOrder = 0
+    DesignSize = (
+      624
+      33)
     object Label1: TLabel
       Left = 8
       Top = 8
@@ -59,6 +62,16 @@ object FrmMenuInicial: TFrmMenuInicial
       Top = 8
       Width = 3
       Height = 15
+    end
+    object BtnRodapeUnidades: TButton
+      Left = 540
+      Top = 4
+      Width = 75
+      Height = 25
+      Anchors = [akTop, akRight]
+      Caption = 'Unidades'
+      TabOrder = 0
+      OnClick = BtnRodapeUnidadesClick
     end
   end
   object PageControl1: TPageControl

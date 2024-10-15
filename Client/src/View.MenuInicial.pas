@@ -31,14 +31,17 @@ type
     tbsPluviometro: TTabSheet;
     PnlGraficoPluviometro: TPanel;
     wbPluviometro: TWebBrowser;
+    BtnRodapeUnidades: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AtualizarRodape;
+    procedure BtnRodapeUnidadesClick(Sender: TObject);
   private
     FUnidade: TUnidade;
     FGrafico: TWebCharts;
     procedure GerarAtualizarGraficoPluviometroMenuPrincipal;
     procedure GerarGraficoPluviometro;
+    procedure BuscarUnidade;
   public
     { Public declarations }
   end;
@@ -61,23 +64,9 @@ end;
 
 procedure TFrmMenuInicial.FormCreate(Sender: TObject);
 begin
-  FrmUnidades := TFrmUnidades.Create(nil);
-  Try
-    FrmUnidades.ShowModal;
+  BuscarUnidade;
 
-    FUnidade := TUnidade.Create;
-    FUnidade.ID := FrmUnidades.mtUnidades.FieldByName('ID').AsString;
-    FUnidade.CODIGO := FrmUnidades.mtUnidades.FieldByName('CODIGO').AsString;
-    FUnidade.NOME := FrmUnidades.mtUnidades.FieldByName('NOME').AsString;
-    FUnidade.CHAVE := FrmUnidades.mtUnidades.FieldByName('CHAVE').AsString;
-
-    GerarAtualizarGraficoPluviometroMenuPrincipal;
-
-    AtualizarRodape;
-
-  Finally
-    FreeAndNil(FrmUnidades);
-  End;
+  GerarAtualizarGraficoPluviometroMenuPrincipal;
 end;
 
 procedure TFrmMenuInicial.FormDestroy(Sender: TObject);
@@ -92,24 +81,6 @@ var
   LPluviometro: TPluviometro;
   LJsonStream: TStringStream;
 begin
-//  LPluviometro := TPluviometro.Create;
-//  try
-//    LJsonStream := TStringStream.Create
-//      (LPluviometro.getLeituraDiaria(FUnidade.ID, Date));
-//    FDMemTable1.LoadFromJSON(LJsonStream.DataString);
-//    FDMemTable1.Open();
-//
-//    FGrafico := TWebCharts.Create;
-//    FGrafico.NewProject.Charts._ChartType(line).Attributes.Name('Pluviometro')
-//      .ColSpan(12).DataSet.DataSet(FDMemTable1)
-//      .textLabel('mm de chuva por hora do dia corrente').Fill(True)
-//      .LabelName('DATA_HORA').ValueName('MEDICAO').RGBName('0.0.0')
-//      .&End.&End.&End.&End.WebBrowser(wbPluviometro).Generated;
-//  finally
-//    FreeAndNil(LPluviometro);
-//    FreeAndNil(LJsonStream);
-//  end;
-
   TTask.Run(
     procedure
     begin
@@ -158,8 +129,12 @@ begin
   try
     LJsonStream := TStringStream.Create
       (LPluviometro.getLeituraDiaria(FUnidade.ID, Date));
+    FDMemTable1.Close;
     FDMemTable1.LoadFromJSON(LJsonStream.DataString);
     FDMemTable1.Open();
+
+    If Assigned(FGrafico) Then
+      FreeAndNil(FGrafico);
 
     FGrafico := TWebCharts.Create;
     FGrafico.NewProject.Charts._ChartType(line).Attributes.Name('Pluviometro')
@@ -171,6 +146,28 @@ begin
     FreeAndNil(LPluviometro);
     FreeAndNil(LJsonStream);
   end;
+end;
+
+procedure TFrmMenuInicial.BuscarUnidade;
+begin
+  FrmUnidades := TFrmUnidades.Create(nil);
+  try
+    FrmUnidades.ShowModal;
+    FUnidade := TUnidade.Create;
+    FUnidade.ID := FrmUnidades.mtUnidades.FieldByName('ID').AsString;
+    FUnidade.CODIGO := FrmUnidades.mtUnidades.FieldByName('CODIGO').AsString;
+    FUnidade.NOME := FrmUnidades.mtUnidades.FieldByName('NOME').AsString;
+    FUnidade.CHAVE := FrmUnidades.mtUnidades.FieldByName('CHAVE').AsString;
+    GerarGraficoPluviometro;
+    AtualizarRodape;
+  finally
+    FreeAndNil(FrmUnidades);
+  end;
+end;
+
+procedure TFrmMenuInicial.BtnRodapeUnidadesClick(Sender: TObject);
+begin
+  BuscarUnidade;
 end;
 
 end.
