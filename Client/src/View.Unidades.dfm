@@ -2,7 +2,7 @@ object FrmUnidades: TFrmUnidades
   Left = 0
   Top = 0
   Caption = 'Unidades'
-  ClientHeight = 527
+  ClientHeight = 441
   ClientWidth = 624
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -16,11 +16,10 @@ object FrmUnidades: TFrmUnidades
     Left = 0
     Top = 0
     Width = 624
-    Height = 527
+    Height = 441
     ActivePage = TsListagemUnidades
     Align = alClient
     TabOrder = 0
-    ExplicitHeight = 441
     object TsListagemUnidades: TTabSheet
       Caption = 'Listagem'
       object PnlPesquisaUnidades: TPanel
@@ -75,7 +74,7 @@ object FrmUnidades: TFrmUnidades
         Left = 0
         Top = 97
         Width = 616
-        Height = 351
+        Height = 265
         Align = alClient
         DataSource = dsUnidades
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
@@ -105,7 +104,7 @@ object FrmUnidades: TFrmUnidades
       end
       object pnlFoodListagem: TPanel
         Left = 0
-        Top = 448
+        Top = 362
         Width = 616
         Height = 49
         Align = alBottom
@@ -127,10 +126,11 @@ object FrmUnidades: TFrmUnidades
     object TsCadastroUnidades: TTabSheet
       Caption = 'Cadastro'
       ImageIndex = 1
+      OnEnter = TsCadastroUnidadesEnter
       OnExit = TsCadastroUnidadesExit
       DesignSize = (
         616
-        497)
+        411)
       object LbUnidadeCadastroNome: TLabel
         Left = 16
         Top = 70
@@ -183,12 +183,11 @@ object FrmUnidades: TFrmUnidades
       end
       object PnlFoodCadastro: TPanel
         Left = 0
-        Top = 448
+        Top = 362
         Width = 616
         Height = 49
         Align = alBottom
         TabOrder = 3
-        ExplicitTop = 440
         DesignSize = (
           616
           49)
@@ -200,6 +199,7 @@ object FrmUnidades: TFrmUnidades
           Anchors = [akTop, akRight]
           Caption = 'Salvar'
           TabOrder = 0
+          OnClick = BtnSalvarClick
         end
         object BtnNovo: TButton
           Left = 359
@@ -248,8 +248,8 @@ object FrmUnidades: TFrmUnidades
     UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
     UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
-    Left = 528
-    Top = 304
+    Left = 544
+    Top = 288
     object mtUnidadesID: TLargeintField
       FieldName = 'ID'
     end

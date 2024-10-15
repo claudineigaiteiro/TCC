@@ -13,6 +13,8 @@ uses
   FireDAC.Stan.Async, FireDAC.DApt;
 
 type
+  TStatus = (tsInsert, tsEdit, tsNavegacao);
+
   TFrmUnidades = class(TForm)
     PgcUnidades: TPageControl;
     TsListagemUnidades: TTabSheet;
@@ -50,8 +52,12 @@ type
     procedure BtnNovoClick(Sender: TObject);
     procedure TsCadastroUnidadesExit(Sender: TObject);
     procedure BtnExcluirClick(Sender: TObject);
+    procedure TsCadastroUnidadesEnter(Sender: TObject);
+    procedure BtnSalvarClick(Sender: TObject);
   private
-    { Private declarations }
+    FStatus: TStatus;
+    procedure SalvarRegistro;
+    procedure Pesquisar;
   public
     { Public declarations }
     FTeste: TFDMemTable;
@@ -70,6 +76,7 @@ procedure TFrmUnidades.BtnCancelarClick(Sender: TObject);
 begin
   mtUnidades.Cancel;
   PgcUnidades.ActivePage := TsListagemUnidades;
+  FStatus := tsNavegacao;
 end;
 
 procedure TFrmUnidades.BtnExcluirClick(Sender: TObject);
@@ -89,58 +96,25 @@ end;
 procedure TFrmUnidades.BtnNovoClick(Sender: TObject);
 begin
   mtUnidades.Insert;
+  FStatus := tsInsert;
 end;
 
 procedure TFrmUnidades.BtnPesquisarUnidadeClick(Sender: TObject);
-const
-  CRecursoAll = 'unidades';
-  CRecursoNome = 'unidades/nome';
-  CRecursoCodigo = 'unidades/codigo';
-var
-  LResponse: IResponse;
-  LJsonStream: TStringStream;
-  LRecurso: String;
-  LJSON: TJSONObject;
 begin
-  if EdtFiltroPesquisa.Text = EmptyStr then
-  begin
-    LRecurso := CRecursoAll;
-  end
-  else if RgFiltroPesquisaUnidades.ItemIndex = 0 then
-  begin
-    LRecurso := CRecursoNome;
-    LJSON := TJSONObject.Create;
-    LJSON.AddPair('nome', EdtFiltroPesquisa.Text);
-  end
-  else if RgFiltroPesquisaUnidades.ItemIndex = 1 then
-  begin
-    LRecurso := CRecursoCodigo;
-    LJSON := TJSONObject.Create;
-    LJSON.AddPair('codigo', EdtFiltroPesquisa.Text);
-  end;
+  Pesquisar;
+end;
 
-  if Assigned(LJSON) then
-  begin
-    LResponse := TRequest.New.BaseURL('http://localhost:9000')
-      .Resource(LRecurso).AddBody(LJSON).Accept('application/json').Get;
-  end
-  else
-  Begin
-    LResponse := TRequest.New.BaseURL('http://localhost:9000')
-      .Resource(LRecurso).Accept('application/json').Get;
-  End;
+procedure TFrmUnidades.BtnSalvarClick(Sender: TObject);
+begin
+  if FStatus = tsInsert then
+    SalvarRegistro;
 
-  if LResponse.StatusCode = 200 then
-  begin
-    LJsonStream := TStringStream.Create(LResponse.Content);
-    try
-      mtUnidades.Close;
-      mtUnidades.LoadFromJSON(LJsonStream.DataString);
-      mtUnidades.Open;
-    finally
-      LJsonStream.Free;
-    end;
-  end;
+  mtUnidades.Cancel;
+  FStatus := tsNavegacao;
+
+  PgcUnidades.ActivePage := TsListagemUnidades;
+
+  Pesquisar;
 end;
 
 procedure TFrmUnidades.dgUnidadesCellClick(Column: TColumn);
@@ -154,6 +128,8 @@ var
   LJsonStream: TStringStream;
 begin
   ReportMemoryLeaksOnShutdown := True;
+
+  FStatus := tsNavegacao;
 
   LResponse := TRequest.New.BaseURL('http://localhost:9000')
     .Resource('unidades').Accept('application/json').Get;
@@ -173,6 +149,69 @@ begin
   end;
 end;
 
+procedure TFrmUnidades.SalvarRegistro;
+var
+  LJSON: TJSONObject;
+begin
+  LJSON := TJSONObject.Create.AddPair('NOME', edtCadastroNome.Text)
+    .AddPair('CODIGO', EdtCadastroCodigo.Text)
+    .AddPair('CHAVE', edtCadastroChave.Text);
+
+  TRequest.New.BaseURL('http://localhost:9000').Resource('unidades')
+    .ContentType('application/json').AddBody(LJSON).Post;
+
+end;
+
+procedure TFrmUnidades.Pesquisar;
+var
+  LRecurso: string;
+  LJSON: TJSONObject;
+  LResponse: IResponse;
+  LJsonStream: TStringStream;
+const
+  CRecursoAll = 'unidades';
+  CRecursoNome = 'unidades/nome';
+  CRecursoCodigo = 'unidades/codigo';
+begin
+  if EdtFiltroPesquisa.Text = EmptyStr then
+  begin
+    LRecurso := CRecursoAll;
+  end
+  else if RgFiltroPesquisaUnidades.ItemIndex = 0 then
+  begin
+    LRecurso := CRecursoNome;
+    LJSON := TJSONObject.Create;
+    LJSON.AddPair('nome', EdtFiltroPesquisa.Text);
+  end
+  else if RgFiltroPesquisaUnidades.ItemIndex = 1 then
+  begin
+    LRecurso := CRecursoCodigo;
+    LJSON := TJSONObject.Create;
+    LJSON.AddPair('codigo', EdtFiltroPesquisa.Text);
+  end;
+  if Assigned(LJSON) then
+  begin
+    LResponse := TRequest.New.BaseURL('http://localhost:9000')
+      .Resource(LRecurso).AddBody(LJSON).Accept('application/json').Get;
+  end
+  else
+  begin
+    LResponse := TRequest.New.BaseURL('http://localhost:9000')
+      .Resource(LRecurso).Accept('application/json').Get;
+  end;
+  if LResponse.StatusCode = 200 then
+  begin
+    LJsonStream := TStringStream.Create(LResponse.Content);
+    try
+      mtUnidades.Close;
+      mtUnidades.LoadFromJSON(LJsonStream.DataString);
+      mtUnidades.Open;
+    finally
+      LJsonStream.Free;
+    end;
+  end;
+end;
+
 procedure TFrmUnidades.RgFiltroPesquisaUnidadesClick(Sender: TObject);
 begin
   LblFiltroPesquisa.Caption := RgFiltroPesquisaUnidades.Items
@@ -181,9 +220,15 @@ begin
   EdtFiltroPesquisa.Text := EmptyStr;
 end;
 
+procedure TFrmUnidades.TsCadastroUnidadesEnter(Sender: TObject);
+begin
+  FStatus := tsEdit;
+end;
+
 procedure TFrmUnidades.TsCadastroUnidadesExit(Sender: TObject);
 begin
   mtUnidades.Cancel;
+  FStatus := tsNavegacao;
 end;
 
 end.
