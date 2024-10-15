@@ -142,6 +142,10 @@
             <Form>frmBaseDesmonstracao</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="src\View.Pluviometro.pas">
+            <Form>frmBaseDesmonstracao1</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

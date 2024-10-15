@@ -20,7 +20,7 @@ type
     LblCodigoRodape: TLabel;
     LblUnidadeRodape: TLabel;
     memMenuPrincipal: TMainMenu;
-    Arquivo1: TMenuItem;
+    miArquivo: TMenuItem;
     mtGraficoPluviometro: TFDMemTable;
     PageControl1: TPageControl;
     tbsPluviometro: TTabSheet;
@@ -40,11 +40,14 @@ type
     mtGraficoAneometroDATA_HORA: TDateTimeField;
     mtGraficoAneometroVELOCIDADE: TCurrencyField;
     mtGraficoAneometroID_UNIDADE: TIntegerField;
+    miDados: TMenuItem;
+    miGraficoPluviometro: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AtualizarRodape;
     procedure BtnRodapeUnidadesClick(Sender: TObject);
     procedure miSairClick(Sender: TObject);
+    procedure miGraficoPluviometroClick(Sender: TObject);
   private
     FUnidade: TUnidade;
     FGrafico: TWebCharts;
@@ -66,7 +69,7 @@ implementation
 
 uses
   View.Unidades, System.JSON, Classe.Pluviometro, Charts.Types,
-  Classe.Aneometro;
+  Classe.Aneometro, View.Pluviometro;
 
 procedure TFrmMenuInicial.AtualizarRodape;
 begin
@@ -228,6 +231,11 @@ begin
     FreeAndNil(LPluviometro);
     FreeAndNil(LJsonStream);
   end;
+end;
+
+procedure TFrmMenuInicial.miGraficoPluviometroClick(Sender: TObject);
+begin
+  frmPluviometro := T
 end;
 
 procedure TFrmMenuInicial.miSairClick(Sender: TObject);

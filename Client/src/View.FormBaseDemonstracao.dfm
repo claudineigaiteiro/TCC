@@ -87,9 +87,9 @@ object frmBaseDesmonstracao: TfrmBaseDesmonstracao
     object lblMedia: TLabel
       Left = 9
       Top = 7
-      Width = 28
+      Width = 67
       Height = 15
-      Caption = 'Total:'
+      Caption = 'M'#233'dia/Hora:'
     end
     object LblTotal: TLabel
       Left = 153
@@ -112,5 +112,17 @@ object frmBaseDesmonstracao: TfrmBaseDesmonstracao
       Height = 23
       TabOrder = 1
     end
+  end
+  object PnlBody: TPanel
+    Left = 0
+    Top = 73
+    Width = 624
+    Height = 311
+    Align = alClient
+    TabOrder = 2
+    ExplicitLeft = 232
+    ExplicitTop = 224
+    ExplicitWidth = 185
+    ExplicitHeight = 41
   end
 end

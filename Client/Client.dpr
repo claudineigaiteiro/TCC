@@ -9,7 +9,8 @@ uses
   Classe.Unidade in 'src\Classe.Unidade.pas',
   Classe.Pluviometro in 'src\Classe.Pluviometro.pas',
   Classe.Aneometro in 'src\Classe.Aneometro.pas',
-  View.FormBaseDemonstracao in 'src\View.FormBaseDemonstracao.pas' {frmBaseDesmonstracao};
+  View.FormBaseDemonstracao in 'src\View.FormBaseDemonstracao.pas' {frmBaseDesmonstracao},
+  View.Pluviometro in 'src\View.Pluviometro.pas' {frmBaseDesmonstracao1};
 
 {$R *.res}
 
@@ -18,6 +19,6 @@ begin
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Glossy');
   Application.CreateForm(TFrmMenuInicial, FrmMenuInicial);
-  Application.CreateForm(TfrmBaseDesmonstracao, frmBaseDesmonstracao);
+  Application.CreateForm(TfrmBaseDesmonstracao1, frmBaseDesmonstracao1);
   Application.Run;
 end.

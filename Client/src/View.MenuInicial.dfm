@@ -117,10 +117,6 @@ object FrmMenuInicial: TFrmMenuInicial
         Height = 297
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 216
-        ExplicitTop = 128
-        ExplicitWidth = 185
-        ExplicitHeight = 41
         object wbAneometro: TWebBrowser
           Left = 1
           Top = 1
@@ -145,11 +141,18 @@ object FrmMenuInicial: TFrmMenuInicial
   object memMenuPrincipal: TMainMenu
     Left = 504
     Top = 224
-    object Arquivo1: TMenuItem
+    object miArquivo: TMenuItem
       Caption = 'Arquivo'
       object miSair: TMenuItem
         Caption = 'Sair'
         OnClick = miSairClick
+      end
+    end
+    object miDados: TMenuItem
+      Caption = 'Dados'
+      object miGraficoPluviometro: TMenuItem
+        Caption = 'Grafico pluvi'#244'metro'
+        OnClick = miGraficoPluviometroClick
       end
     end
   end

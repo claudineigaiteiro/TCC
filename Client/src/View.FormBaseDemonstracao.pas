@@ -22,6 +22,7 @@ type
     edtMedia: TDBEdit;
     LblTotal: TLabel;
     edtTotal: TDBEdit;
+    PnlBody: TPanel;
     procedure RgTipoBuscaClick(Sender: TObject);
   private
     { Private declarations }
