@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Classe.Unidade, Vcl.ExtCtrls, Vcl.StdCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Classe.Unidade, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Menus;
 
 type
   TFrmMenuInicial = class(TForm)
@@ -14,6 +14,8 @@ type
     Label2: TLabel;
     LblCodigoRodape: TLabel;
     LblUnidadeRodape: TLabel;
+    memMenuPrincipal: TMainMenu;
+    Arquivo1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AtualizarRodape;

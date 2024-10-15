@@ -10,6 +10,7 @@ object FrmMenuInicial: TFrmMenuInicial
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  Menu = memMenuPrincipal
   WindowState = wsMaximized
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -21,7 +22,6 @@ object FrmMenuInicial: TFrmMenuInicial
     Height = 33
     Align = alBottom
     TabOrder = 0
-    ExplicitTop = 408
     object Label1: TLabel
       Left = 8
       Top = 8
@@ -59,6 +59,13 @@ object FrmMenuInicial: TFrmMenuInicial
       Top = 8
       Width = 3
       Height = 15
+    end
+  end
+  object memMenuPrincipal: TMainMenu
+    Left = 504
+    Top = 224
+    object Arquivo1: TMenuItem
+      Caption = 'Arquivo'
     end
   end
 end
