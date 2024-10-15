@@ -37,6 +37,8 @@ type
   private
     FUnidade: TUnidade;
     FGrafico: TWebCharts;
+    procedure GerarAtualizarGraficoPluviometroMenuPrincipal;
+    procedure GerarGraficoPluviometro;
   public
     { Public declarations }
   end;
@@ -58,9 +60,6 @@ begin
 end;
 
 procedure TFrmMenuInicial.FormCreate(Sender: TObject);
-var
-  LPluviometro: TPluviometro;
-  LJsonStream: TStringStream;
 begin
   FrmUnidades := TFrmUnidades.Create(nil);
   Try
@@ -72,63 +71,7 @@ begin
     FUnidade.NOME := FrmUnidades.mtUnidades.FieldByName('NOME').AsString;
     FUnidade.CHAVE := FrmUnidades.mtUnidades.FieldByName('CHAVE').AsString;
 
-    LPluviometro := TPluviometro.Create;
-    try
-      LJsonStream := TStringStream.Create
-        (LPluviometro.getLeituraDiaria(FUnidade.ID, Date));
-      FDMemTable1.LoadFromJSON(LJsonStream.DataString);
-      FDMemTable1.Open();
-
-      FGrafico := TWebCharts.Create;
-      FGrafico.NewProject.Charts._ChartType(line).Attributes.Name('Pluviometro')
-        .ColSpan(12).DataSet.DataSet(FDMemTable1)
-        .textLabel('mm de chuva por hora do dia corrente')
-        .Fill(True)
-        .LabelName('DATA_HORA').ValueName('MEDICAO').RGBName('0.0.0')
-        .&End.&End.&End.&End.WebBrowser(wbPluviometro).Generated;
-    finally
-      FreeAndNil(LPluviometro);
-      FreeAndNil(LJsonStream);
-    end;
-
-    TTask.Run(
-      procedure
-      begin
-        while True do
-        begin
-          Sleep(60000);
-          TThread.Synchronize(TThread.CurrentThread,
-            procedure
-            var
-              LPluviometro: TPluviometro;
-              LJsonStream: TStringStream;
-            begin
-              LPluviometro := TPluviometro.Create;
-              Try
-                LJsonStream := TStringStream.Create
-                  (LPluviometro.getLeituraDiaria(FUnidade.ID, Date));
-                FDMemTable1.Close;
-                FDMemTable1.LoadFromJSON(LJsonStream.DataString);
-                FDMemTable1.Open();
-
-                if Assigned(FGrafico) then
-                  FreeAndNil(FGrafico);
-
-                FGrafico := TWebCharts.Create;
-                FGrafico.NewProject.Charts._ChartType(line)
-                  .Attributes.Name('Pluviometro').ColSpan(12)
-                  .DataSet.DataSet(FDMemTable1)
-                  .textLabel('mm de chuva por hora do dia corrente')
-                  .Fill(True)
-                  .LabelName('DATA_HORA').ValueName('MEDICAO').RGBName('0.0.0')
-                  .&End.&End.&End.&End.WebBrowser(wbPluviometro).Generated;
-              Finally
-                FreeAndNil(LPluviometro);
-                FreeAndNil(LJsonStream);
-              End;
-            end);
-        end;
-      end);
+    GerarAtualizarGraficoPluviometroMenuPrincipal;
 
     AtualizarRodape;
 
@@ -142,6 +85,92 @@ begin
   FreeAndNil(FUnidade);
   If Assigned(FGrafico) then
     FreeAndNil(FGrafico);
+end;
+
+procedure TFrmMenuInicial.GerarAtualizarGraficoPluviometroMenuPrincipal;
+var
+  LPluviometro: TPluviometro;
+  LJsonStream: TStringStream;
+begin
+//  LPluviometro := TPluviometro.Create;
+//  try
+//    LJsonStream := TStringStream.Create
+//      (LPluviometro.getLeituraDiaria(FUnidade.ID, Date));
+//    FDMemTable1.LoadFromJSON(LJsonStream.DataString);
+//    FDMemTable1.Open();
+//
+//    FGrafico := TWebCharts.Create;
+//    FGrafico.NewProject.Charts._ChartType(line).Attributes.Name('Pluviometro')
+//      .ColSpan(12).DataSet.DataSet(FDMemTable1)
+//      .textLabel('mm de chuva por hora do dia corrente').Fill(True)
+//      .LabelName('DATA_HORA').ValueName('MEDICAO').RGBName('0.0.0')
+//      .&End.&End.&End.&End.WebBrowser(wbPluviometro).Generated;
+//  finally
+//    FreeAndNil(LPluviometro);
+//    FreeAndNil(LJsonStream);
+//  end;
+
+  TTask.Run(
+    procedure
+    begin
+      while True do
+      begin
+        TThread.Synchronize(TThread.CurrentThread,
+          procedure
+          var
+            LPluviometro: TPluviometro;
+            LJsonStream: TStringStream;
+          begin
+            LPluviometro := TPluviometro.Create;
+            Try
+              LJsonStream := TStringStream.Create(LPluviometro.getLeituraDiaria
+                (FUnidade.ID, Date));
+              FDMemTable1.Close;
+              FDMemTable1.LoadFromJSON(LJsonStream.DataString);
+              FDMemTable1.Open();
+
+              if Assigned(FGrafico) then
+                FreeAndNil(FGrafico);
+
+              FGrafico := TWebCharts.Create;
+              FGrafico.NewProject.Charts._ChartType(line)
+                .Attributes.Name('Pluviometro').ColSpan(12)
+                .DataSet.DataSet(FDMemTable1)
+                .textLabel('mm de chuva por hora do dia corrente').Fill(True)
+                .LabelName('DATA_HORA').ValueName('MEDICAO').RGBName('0.0.0')
+                .&End.&End.&End.&End.WebBrowser(wbPluviometro).Generated;
+            Finally
+              FreeAndNil(LPluviometro);
+              FreeAndNil(LJsonStream);
+            End;
+          end);
+        Sleep(60000);
+      end;
+    end);
+end;
+
+procedure TFrmMenuInicial.GerarGraficoPluviometro;
+var
+  LPluviometro: TPluviometro;
+  LJsonStream: TStringStream;
+begin
+  LPluviometro := TPluviometro.Create;
+  try
+    LJsonStream := TStringStream.Create
+      (LPluviometro.getLeituraDiaria(FUnidade.ID, Date));
+    FDMemTable1.LoadFromJSON(LJsonStream.DataString);
+    FDMemTable1.Open();
+
+    FGrafico := TWebCharts.Create;
+    FGrafico.NewProject.Charts._ChartType(line).Attributes.Name('Pluviometro')
+      .ColSpan(12).DataSet.DataSet(FDMemTable1)
+      .textLabel('mm de chuva por hora do dia corrente').Fill(True)
+      .LabelName('DATA_HORA').ValueName('MEDICAO').RGBName('0.0.0')
+      .&End.&End.&End.&End.WebBrowser(wbPluviometro).Generated;
+  finally
+    FreeAndNil(LPluviometro);
+    FreeAndNil(LJsonStream);
+  end;
 end;
 
 end.
