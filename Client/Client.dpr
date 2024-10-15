@@ -6,7 +6,8 @@ uses
   View.Unidades in 'src\View.Unidades.pas' {FrmUnidades},
   Vcl.Themes,
   Vcl.Styles,
-  Classe.Unidade in 'src\Classe.Unidade.pas';
+  Classe.Unidade in 'src\Classe.Unidade.pas',
+  Classe.Pluviometro in 'src\Classe.Pluviometro.pas';
 
 {$R *.res}
 

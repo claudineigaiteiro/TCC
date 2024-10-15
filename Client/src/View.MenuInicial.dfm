@@ -61,11 +61,76 @@ object FrmMenuInicial: TFrmMenuInicial
       Height = 15
     end
   end
+  object PageControl1: TPageControl
+    Left = 0
+    Top = 0
+    Width = 624
+    Height = 327
+    ActivePage = tbsPluviometro
+    Align = alClient
+    TabOrder = 1
+    object tbsPluviometro: TTabSheet
+      Caption = 'Pluviometro'
+      object PnlGraficoPluviometro: TPanel
+        Left = 0
+        Top = 0
+        Width = 616
+        Height = 297
+        Align = alClient
+        TabOrder = 0
+        ExplicitTop = 8
+        ExplicitHeight = 113
+        object wbPluviometro: TWebBrowser
+          Left = 1
+          Top = 1
+          Width = 614
+          Height = 295
+          Align = alClient
+          TabOrder = 0
+          ExplicitWidth = 622
+          ExplicitHeight = 111
+          ControlData = {
+            4C000000753F00007D1E00000000000000000000000000000000000000000000
+            000000004C000000000000000000000001000000E0D057007335CF11AE690800
+            2B2E126208000000000000004C0000000114020000000000C000000000000046
+            8000000000000000000000000000000000000000000000000000000000000000
+            00000000000000000100000000000000000000000000000000000000}
+        end
+      end
+    end
+  end
   object memMenuPrincipal: TMainMenu
     Left = 504
     Top = 224
     object Arquivo1: TMenuItem
       Caption = 'Arquivo'
     end
+  end
+  object qryPluviometro: TFDQuery
+    Left = 504
+    Top = 160
+    object qryPluviometroID: TIntegerField
+      FieldName = 'ID'
+    end
+    object qryPluviometroMEDICAO: TVariantField
+      FieldName = 'MEDICAO'
+    end
+    object qryPluviometroID_UNIDADE: TIntegerField
+      FieldName = 'ID_UNIDADE'
+    end
+    object qryPluviometroDATA_HORA: TDateTimeField
+      FieldName = 'DATA_HORA'
+    end
+  end
+  object FDMemTable1: TFDMemTable
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 304
+    Top = 192
   end
 end
