@@ -153,7 +153,8 @@ begin
   FrmUnidades := TFrmUnidades.Create(nil);
   try
     FrmUnidades.ShowModal;
-    FUnidade := TUnidade.Create;
+    If Not Assigned(FUnidade) then
+      FUnidade := TUnidade.Create;
     FUnidade.ID := FrmUnidades.mtUnidades.FieldByName('ID').AsString;
     FUnidade.CODIGO := FrmUnidades.mtUnidades.FieldByName('CODIGO').AsString;
     FUnidade.NOME := FrmUnidades.mtUnidades.FieldByName('NOME').AsString;
