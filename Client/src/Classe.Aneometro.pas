@@ -1,12 +1,9 @@
-unit Classe.Pluviometro;
+unit Classe.Aneometro;
 
 interface
 
-uses
-  System.JSON;
-
 type
-  TPluviometro = class
+  TAneometro = class
   private
   public
     function getLeituraDiaria(AIdUnidade: String; AData: TDate): String;
@@ -14,14 +11,14 @@ type
 
 implementation
 
-{ TPluviometro }
+{ TAneometro }
 
-uses RESTRequest4D, System.SysUtils;
+uses
+  RESTRequest4D, System.SysUtils, System.JSON;
 
-function TPluviometro.getLeituraDiaria(AIdUnidade: String;
-  AData: TDate): String;
+function TAneometro.getLeituraDiaria(AIdUnidade: String; AData: TDate): String;
 const
-  CUrl = 'http://localhost:9000/pluviometros/%s/dia';
+  CUrl = 'http://localhost:9000/aneometros/%s/dia';
 var
   LResponse: IResponse;
   LUrl: String;

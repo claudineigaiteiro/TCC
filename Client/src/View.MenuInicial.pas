@@ -31,15 +31,27 @@ type
     mtGraficoPluviometroDATA_HORA: TDateTimeField;
     mtGraficoPluviometroID_UNIDADE: TIntegerField;
     mtGraficoPluviometroMEDICAO: TCurrencyField;
+    miSair: TMenuItem;
+    tbsAneometro: TTabSheet;
+    Panel1: TPanel;
+    wbAneometro: TWebBrowser;
+    mtGraficoAneometro: TFDMemTable;
+    mtGraficoAneometroID: TIntegerField;
+    mtGraficoAneometroDATA_HORA: TDateTimeField;
+    mtGraficoAneometroVELOCIDADE: TCurrencyField;
+    mtGraficoAneometroID_UNIDADE: TIntegerField;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AtualizarRodape;
     procedure BtnRodapeUnidadesClick(Sender: TObject);
+    procedure miSairClick(Sender: TObject);
   private
     FUnidade: TUnidade;
     FGrafico: TWebCharts;
     procedure GerarAtualizarGraficoPluviometroMenuPrincipal;
+    procedure GerarAtualizarGraficoAneometroMenuPrincipal;
     procedure GerarGraficoPluviometro;
+    procedure GerarGraficoAneometro;
     procedure BuscarUnidade;
   public
     { Public declarations }
@@ -53,7 +65,8 @@ implementation
 {$R *.dfm}
 
 uses
-  View.Unidades, System.JSON, Classe.Pluviometro, Charts.Types;
+  View.Unidades, System.JSON, Classe.Pluviometro, Charts.Types,
+  Classe.Aneometro;
 
 procedure TFrmMenuInicial.AtualizarRodape;
 begin
@@ -66,6 +79,7 @@ begin
   BuscarUnidade;
 
   GerarAtualizarGraficoPluviometroMenuPrincipal;
+  GerarAtualizarGraficoAneometroMenuPrincipal;
 end;
 
 procedure TFrmMenuInicial.FormDestroy(Sender: TObject);
@@ -73,6 +87,47 @@ begin
   FreeAndNil(FUnidade);
   If Assigned(FGrafico) then
     FreeAndNil(FGrafico);
+end;
+
+procedure TFrmMenuInicial.GerarAtualizarGraficoAneometroMenuPrincipal;
+begin
+  TTask.Run(
+    procedure
+    begin
+      while True do
+      begin
+        TThread.Synchronize(TThread.CurrentThread,
+          procedure
+          var
+            LAneometro: TAneometro;
+            LJsonStream: TStringStream;
+          begin
+            LAneometro := TAneometro.Create;
+            Try
+              LJsonStream := TStringStream.Create(LAneometro.getLeituraDiaria
+                (FUnidade.ID, Date));
+              mtGraficoAneometro.Close;
+              mtGraficoAneometro.LoadFromJSON(LJsonStream.DataString);
+              mtGraficoAneometro.Open();
+
+              if Assigned(FGrafico) then
+                FreeAndNil(FGrafico);
+
+              FGrafico := TWebCharts.Create;
+              FGrafico.NewProject.Charts._ChartType(line)
+                .Attributes.Name('Pluviometro').ColSpan(12)
+                .DataSet.DataSet(mtGraficoAneometro)
+                .textLabel('mm de chuva por hora do dia corrente').Fill(True)
+                .LabelName('DATA_HORA').ValueName('VELOCIDADE').RGBName('0.0.0')
+                .&End.&End.&End.&End.WebBrowser(wbAneometro).Generated;
+            Finally
+              FreeAndNil(LAneometro);
+              FreeAndNil(LJsonStream);
+            End;
+          end);
+        Sleep(60000);
+      end;
+    end);
 end;
 
 procedure TFrmMenuInicial.GerarAtualizarGraficoPluviometroMenuPrincipal;
@@ -119,6 +174,34 @@ begin
     end);
 end;
 
+procedure TFrmMenuInicial.GerarGraficoAneometro;
+var
+  LAneometro: TAneometro;
+  LJsonStream: TStringStream;
+begin
+  LAneometro := TAneometro.Create;
+  try
+    LJsonStream := TStringStream.Create
+      (LAneometro.getLeituraDiaria(FUnidade.ID, Date));
+    mtGraficoAneometro.Close;
+    mtGraficoAneometro.LoadFromJSON(LJsonStream.DataString);
+    mtGraficoAneometro.Open();
+
+    If Assigned(FGrafico) Then
+      FreeAndNil(FGrafico);
+
+    FGrafico := TWebCharts.Create;
+    FGrafico.NewProject.Charts._ChartType(line).Attributes.Name('Pluviometro')
+      .ColSpan(12).DataSet.DataSet(mtGraficoAneometro)
+      .textLabel('mm de chuva por hora do dia corrente').Fill(True)
+      .LabelName('DATA_HORA').ValueName('VELOCIDADE').RGBName('0.0.0')
+      .&End.&End.&End.&End.WebBrowser(wbAneometro).Generated;
+  finally
+    FreeAndNil(LAneometro);
+    FreeAndNil(LJsonStream);
+  end;
+end;
+
 procedure TFrmMenuInicial.GerarGraficoPluviometro;
 var
   LPluviometro: TPluviometro;
@@ -147,6 +230,11 @@ begin
   end;
 end;
 
+procedure TFrmMenuInicial.miSairClick(Sender: TObject);
+begin
+  Close;
+end;
+
 procedure TFrmMenuInicial.BuscarUnidade;
 begin
   FrmUnidades := TFrmUnidades.Create(nil);
@@ -159,6 +247,7 @@ begin
     FUnidade.NOME := FrmUnidades.mtUnidades.FieldByName('NOME').AsString;
     FUnidade.CHAVE := FrmUnidades.mtUnidades.FieldByName('CHAVE').AsString;
     GerarGraficoPluviometro;
+    GerarGraficoAneometro;
     AtualizarRodape;
   finally
     FreeAndNil(FrmUnidades);

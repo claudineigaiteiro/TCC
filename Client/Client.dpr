@@ -7,7 +7,8 @@ uses
   Vcl.Themes,
   Vcl.Styles,
   Classe.Unidade in 'src\Classe.Unidade.pas',
-  Classe.Pluviometro in 'src\Classe.Pluviometro.pas';
+  Classe.Pluviometro in 'src\Classe.Pluviometro.pas',
+  Classe.Aneometro in 'src\Classe.Aneometro.pas';
 
 {$R *.res}
 

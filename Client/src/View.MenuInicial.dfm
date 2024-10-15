@@ -83,7 +83,7 @@ object FrmMenuInicial: TFrmMenuInicial
     Align = alClient
     TabOrder = 1
     object tbsPluviometro: TTabSheet
-      Caption = 'Pluviometro'
+      Caption = 'Pluvi'#244'metro'
       object PnlGraficoPluviometro: TPanel
         Left = 0
         Top = 0
@@ -107,12 +107,50 @@ object FrmMenuInicial: TFrmMenuInicial
         end
       end
     end
+    object tbsAneometro: TTabSheet
+      Caption = 'Anem'#244'metro'
+      ImageIndex = 1
+      object Panel1: TPanel
+        Left = 0
+        Top = 0
+        Width = 616
+        Height = 297
+        Align = alClient
+        TabOrder = 0
+        ExplicitLeft = 216
+        ExplicitTop = 128
+        ExplicitWidth = 185
+        ExplicitHeight = 41
+        object wbAneometro: TWebBrowser
+          Left = 1
+          Top = 1
+          Width = 614
+          Height = 295
+          Align = alClient
+          TabOrder = 0
+          ExplicitLeft = 280
+          ExplicitTop = 136
+          ExplicitWidth = 300
+          ExplicitHeight = 150
+          ControlData = {
+            4C000000753F00007D1E00000000000000000000000000000000000000000000
+            000000004C000000000000000000000001000000E0D057007335CF11AE690800
+            2B2E126208000000000000004C0000000114020000000000C000000000000046
+            8000000000000000000000000000000000000000000000000000000000000000
+            00000000000000000100000000000000000000000000000000000000}
+        end
+      end
+    end
   end
   object memMenuPrincipal: TMainMenu
     Left = 504
     Top = 224
     object Arquivo1: TMenuItem
       Caption = 'Arquivo'
+      object miSair: TMenuItem
+        Caption = 'Sair'
+        OnClick = miSairClick
+      end
     end
   end
   object mtGraficoPluviometro: TFDMemTable
@@ -135,6 +173,29 @@ object FrmMenuInicial: TFrmMenuInicial
       FieldName = 'MEDICAO'
     end
     object mtGraficoPluviometroID_UNIDADE: TIntegerField
+      FieldName = 'ID_UNIDADE'
+    end
+  end
+  object mtGraficoAneometro: TFDMemTable
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 504
+    Top = 64
+    object mtGraficoAneometroID: TIntegerField
+      FieldName = 'ID'
+    end
+    object mtGraficoAneometroDATA_HORA: TDateTimeField
+      FieldName = 'DATA_HORA'
+    end
+    object mtGraficoAneometroVELOCIDADE: TCurrencyField
+      FieldName = 'VELOCIDADE'
+    end
+    object mtGraficoAneometroID_UNIDADE: TIntegerField
       FieldName = 'ID_UNIDADE'
     end
   end
