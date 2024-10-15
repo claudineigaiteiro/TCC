@@ -135,6 +135,7 @@
             <Form>FrmUnidades</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="src\Classe.Unidade.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

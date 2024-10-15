@@ -5,7 +5,8 @@ uses
   View.MenuInicial in 'src\View.MenuInicial.pas' {FrmMenuInicial},
   View.Unidades in 'src\View.Unidades.pas' {FrmUnidades},
   Vcl.Themes,
-  Vcl.Styles;
+  Vcl.Styles,
+  Classe.Unidade in 'src\Classe.Unidade.pas';
 
 {$R *.res}
 

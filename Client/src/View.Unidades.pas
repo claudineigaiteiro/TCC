@@ -47,13 +47,14 @@ type
     procedure BtnPesquisarUnidadeClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure RgFiltroPesquisaUnidadesClick(Sender: TObject);
-    procedure dgUnidadesCellClick(Column: TColumn);
     procedure BtnCancelarClick(Sender: TObject);
     procedure BtnNovoClick(Sender: TObject);
     procedure TsCadastroUnidadesExit(Sender: TObject);
     procedure BtnExcluirClick(Sender: TObject);
     procedure TsCadastroUnidadesEnter(Sender: TObject);
     procedure BtnSalvarClick(Sender: TObject);
+    procedure btnEntrarClick(Sender: TObject);
+    procedure dgUnidadesDblClick(Sender: TObject);
   private
     FStatus: TStatus;
     procedure InserirRegistro(AJSON: TJSONObject);
@@ -78,6 +79,12 @@ begin
   mtUnidades.Cancel;
   PgcUnidades.ActivePage := TsListagemUnidades;
   FStatus := tsNavegacao;
+end;
+
+procedure TFrmUnidades.btnEntrarClick(Sender: TObject);
+begin
+  if mtUnidades.RecordCount > 0 then
+    Close;
 end;
 
 procedure TFrmUnidades.BtnExcluirClick(Sender: TObject);
@@ -126,18 +133,18 @@ begin
   Pesquisar;
 end;
 
-procedure TFrmUnidades.dgUnidadesCellClick(Column: TColumn);
+procedure TFrmUnidades.dgUnidadesDblClick(Sender: TObject);
 begin
   PgcUnidades.ActivePage := TsCadastroUnidades;
+  FStatus := tsEdit;
+  mtUnidades.Edit;
 end;
 
 procedure TFrmUnidades.EditarRegistro(AJSON: TJSONObject);
 begin
-    TRequest.New.BaseURL('http://localhost:9000')
-    .Resource('unidades')
+  TRequest.New.BaseURL('http://localhost:9000').Resource('unidades')
     .ResourceSuffix(mtUnidades.FieldByName('ID').AsString)
-    .ContentType('application/json')
-    .AddBody(AJSON).Put;
+    .ContentType('application/json').AddBody(AJSON).Put;
 end;
 
 procedure TFrmUnidades.FormCreate(Sender: TObject);

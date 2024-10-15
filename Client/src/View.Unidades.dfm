@@ -84,7 +84,7 @@ object FrmUnidades: TFrmUnidades
         TitleFont.Height = -12
         TitleFont.Name = 'Segoe UI'
         TitleFont.Style = []
-        OnCellClick = dgUnidadesCellClick
+        OnDblClick = dgUnidadesDblClick
         Columns = <
           item
             Expanded = False
@@ -120,6 +120,7 @@ object FrmUnidades: TFrmUnidades
           Anchors = [akTop, akRight]
           Caption = 'Entrar'
           TabOrder = 0
+          OnClick = btnEntrarClick
         end
       end
     end
