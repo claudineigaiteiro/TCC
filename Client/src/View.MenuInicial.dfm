@@ -78,8 +78,6 @@ object FrmMenuInicial: TFrmMenuInicial
         Height = 297
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 8
-        ExplicitHeight = 113
         object wbPluviometro: TWebBrowser
           Left = 1
           Top = 1
@@ -87,8 +85,6 @@ object FrmMenuInicial: TFrmMenuInicial
           Height = 295
           Align = alClient
           TabOrder = 0
-          ExplicitWidth = 622
-          ExplicitHeight = 111
           ControlData = {
             4C000000753F00007D1E00000000000000000000000000000000000000000000
             000000004C000000000000000000000001000000E0D057007335CF11AE690800
