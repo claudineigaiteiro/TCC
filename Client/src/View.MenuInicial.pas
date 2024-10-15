@@ -21,12 +21,7 @@ type
     LblUnidadeRodape: TLabel;
     memMenuPrincipal: TMainMenu;
     Arquivo1: TMenuItem;
-    qryPluviometro: TFDQuery;
-    qryPluviometroID: TIntegerField;
-    qryPluviometroDATA_HORA: TDateTimeField;
-    qryPluviometroMEDICAO: TVariantField;
-    qryPluviometroID_UNIDADE: TIntegerField;
-    FDMemTable1: TFDMemTable;
+    mtGraficoPluviometro: TFDMemTable;
     PageControl1: TPageControl;
     tbsPluviometro: TTabSheet;
     PnlGraficoPluviometro: TPanel;
@@ -96,9 +91,9 @@ begin
             Try
               LJsonStream := TStringStream.Create(LPluviometro.getLeituraDiaria
                 (FUnidade.ID, Date));
-              FDMemTable1.Close;
-              FDMemTable1.LoadFromJSON(LJsonStream.DataString);
-              FDMemTable1.Open();
+              mtGraficoPluviometro.Close;
+              mtGraficoPluviometro.LoadFromJSON(LJsonStream.DataString);
+              mtGraficoPluviometro.Open();
 
               if Assigned(FGrafico) then
                 FreeAndNil(FGrafico);
@@ -106,7 +101,7 @@ begin
               FGrafico := TWebCharts.Create;
               FGrafico.NewProject.Charts._ChartType(line)
                 .Attributes.Name('Pluviometro').ColSpan(12)
-                .DataSet.DataSet(FDMemTable1)
+                .DataSet.DataSet(mtGraficoPluviometro)
                 .textLabel('mm de chuva por hora do dia corrente').Fill(True)
                 .LabelName('DATA_HORA').ValueName('MEDICAO').RGBName('0.0.0')
                 .&End.&End.&End.&End.WebBrowser(wbPluviometro).Generated;
@@ -129,16 +124,16 @@ begin
   try
     LJsonStream := TStringStream.Create
       (LPluviometro.getLeituraDiaria(FUnidade.ID, Date));
-    FDMemTable1.Close;
-    FDMemTable1.LoadFromJSON(LJsonStream.DataString);
-    FDMemTable1.Open();
+    mtGraficoPluviometro.Close;
+    mtGraficoPluviometro.LoadFromJSON(LJsonStream.DataString);
+    mtGraficoPluviometro.Open();
 
     If Assigned(FGrafico) Then
       FreeAndNil(FGrafico);
 
     FGrafico := TWebCharts.Create;
     FGrafico.NewProject.Charts._ChartType(line).Attributes.Name('Pluviometro')
-      .ColSpan(12).DataSet.DataSet(FDMemTable1)
+      .ColSpan(12).DataSet.DataSet(mtGraficoPluviometro)
       .textLabel('mm de chuva por hora do dia corrente').Fill(True)
       .LabelName('DATA_HORA').ValueName('MEDICAO').RGBName('0.0.0')
       .&End.&End.&End.&End.WebBrowser(wbPluviometro).Generated;

@@ -115,23 +115,7 @@ object FrmMenuInicial: TFrmMenuInicial
       Caption = 'Arquivo'
     end
   end
-  object qryPluviometro: TFDQuery
-    Left = 504
-    Top = 160
-    object qryPluviometroID: TIntegerField
-      FieldName = 'ID'
-    end
-    object qryPluviometroMEDICAO: TVariantField
-      FieldName = 'MEDICAO'
-    end
-    object qryPluviometroID_UNIDADE: TIntegerField
-      FieldName = 'ID_UNIDADE'
-    end
-    object qryPluviometroDATA_HORA: TDateTimeField
-      FieldName = 'DATA_HORA'
-    end
-  end
-  object FDMemTable1: TFDMemTable
+  object mtGraficoPluviometro: TFDMemTable
     FetchOptions.AssignedValues = [evMode]
     FetchOptions.Mode = fmAll
     ResourceOptions.AssignedValues = [rvSilentMode]
@@ -139,7 +123,7 @@ object FrmMenuInicial: TFrmMenuInicial
     UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
     UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
-    Left = 304
-    Top = 192
+    Left = 504
+    Top = 144
   end
 end
