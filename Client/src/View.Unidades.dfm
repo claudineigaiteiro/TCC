@@ -160,7 +160,7 @@ object FrmUnidades: TFrmUnidades
         Anchors = [akLeft, akTop, akRight]
         DataField = 'NOME'
         DataSource = dsUnidades
-        TabOrder = 0
+        TabOrder = 1
       end
       object edtCadastroChave: TDBEdit
         Left = 16
@@ -170,7 +170,7 @@ object FrmUnidades: TFrmUnidades
         Anchors = [akLeft, akTop, akRight]
         DataField = 'CHAVE'
         DataSource = dsUnidades
-        TabOrder = 1
+        TabOrder = 2
       end
       object EdtCadastroCodigo: TDBEdit
         Left = 16
@@ -179,7 +179,7 @@ object FrmUnidades: TFrmUnidades
         Height = 23
         DataField = 'CODIGO'
         DataSource = dsUnidades
-        TabOrder = 2
+        TabOrder = 0
       end
       object PnlFoodCadastro: TPanel
         Left = 0

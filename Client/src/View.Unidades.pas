@@ -10,7 +10,7 @@ uses
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids, Vcl.Mask, Vcl.DBCtrls,
-  FireDAC.Stan.Async, FireDAC.DApt;
+  FireDAC.Stan.Async, FireDAC.DApt, System.JSON;
 
 type
   TStatus = (tsInsert, tsEdit, tsNavegacao);
@@ -56,8 +56,9 @@ type
     procedure BtnSalvarClick(Sender: TObject);
   private
     FStatus: TStatus;
-    procedure SalvarRegistro;
+    procedure InserirRegistro(AJSON: TJSONObject);
     procedure Pesquisar;
+    procedure EditarRegistro(AJSON: TJSONObject);
   public
     { Public declarations }
     FTeste: TFDMemTable;
@@ -70,7 +71,7 @@ implementation
 
 {$R *.dfm}
 
-uses RESTRequest4D, DataSet.Serialize, System.JSON;
+uses RESTRequest4D, DataSet.Serialize;
 
 procedure TFrmUnidades.BtnCancelarClick(Sender: TObject);
 begin
@@ -105,9 +106,17 @@ begin
 end;
 
 procedure TFrmUnidades.BtnSalvarClick(Sender: TObject);
+var
+  LJSON: TJSONObject;
 begin
+  LJSON := TJSONObject.Create.AddPair('NOME', edtCadastroNome.Text)
+    .AddPair('CODIGO', EdtCadastroCodigo.Text)
+    .AddPair('CHAVE', edtCadastroChave.Text);
+
   if FStatus = tsInsert then
-    SalvarRegistro;
+    InserirRegistro(LJSON)
+  else if FStatus = tsEdit then
+    EditarRegistro(LJSON);
 
   mtUnidades.Cancel;
   FStatus := tsNavegacao;
@@ -120,6 +129,15 @@ end;
 procedure TFrmUnidades.dgUnidadesCellClick(Column: TColumn);
 begin
   PgcUnidades.ActivePage := TsCadastroUnidades;
+end;
+
+procedure TFrmUnidades.EditarRegistro(AJSON: TJSONObject);
+begin
+    TRequest.New.BaseURL('http://localhost:9000')
+    .Resource('unidades')
+    .ResourceSuffix(mtUnidades.FieldByName('ID').AsString)
+    .ContentType('application/json')
+    .AddBody(AJSON).Put;
 end;
 
 procedure TFrmUnidades.FormCreate(Sender: TObject);
@@ -149,29 +167,22 @@ begin
   end;
 end;
 
-procedure TFrmUnidades.SalvarRegistro;
-var
-  LJSON: TJSONObject;
+procedure TFrmUnidades.InserirRegistro(AJSON: TJSONObject);
 begin
-  LJSON := TJSONObject.Create.AddPair('NOME', edtCadastroNome.Text)
-    .AddPair('CODIGO', EdtCadastroCodigo.Text)
-    .AddPair('CHAVE', edtCadastroChave.Text);
-
   TRequest.New.BaseURL('http://localhost:9000').Resource('unidades')
-    .ContentType('application/json').AddBody(LJSON).Post;
-
+    .ContentType('application/json').AddBody(AJSON).Post;
 end;
 
 procedure TFrmUnidades.Pesquisar;
-var
-  LRecurso: string;
-  LJSON: TJSONObject;
-  LResponse: IResponse;
-  LJsonStream: TStringStream;
 const
   CRecursoAll = 'unidades';
   CRecursoNome = 'unidades/nome';
   CRecursoCodigo = 'unidades/codigo';
+var
+  LRecurso: string;
+  LResponse: IResponse;
+  LJsonStream: TStringStream;
+  LJSON: TJSONObject;
 begin
   if EdtFiltroPesquisa.Text = EmptyStr then
   begin
@@ -223,6 +234,7 @@ end;
 procedure TFrmUnidades.TsCadastroUnidadesEnter(Sender: TObject);
 begin
   FStatus := tsEdit;
+  mtUnidades.Edit;
 end;
 
 procedure TFrmUnidades.TsCadastroUnidadesExit(Sender: TObject);
