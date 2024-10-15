@@ -138,6 +138,10 @@
         <DCCReference Include="src\Classe.Unidade.pas"/>
         <DCCReference Include="src\Classe.Pluviometro.pas"/>
         <DCCReference Include="src\Classe.Aneometro.pas"/>
+        <DCCReference Include="src\View.FormBaseDemonstracao.pas">
+            <Form>frmBaseDesmonstracao</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

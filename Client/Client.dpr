@@ -8,7 +8,8 @@ uses
   Vcl.Styles,
   Classe.Unidade in 'src\Classe.Unidade.pas',
   Classe.Pluviometro in 'src\Classe.Pluviometro.pas',
-  Classe.Aneometro in 'src\Classe.Aneometro.pas';
+  Classe.Aneometro in 'src\Classe.Aneometro.pas',
+  View.FormBaseDemonstracao in 'src\View.FormBaseDemonstracao.pas' {frmBaseDesmonstracao};
 
 {$R *.res}
 
@@ -17,5 +18,6 @@ begin
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Glossy');
   Application.CreateForm(TFrmMenuInicial, FrmMenuInicial);
+  Application.CreateForm(TfrmBaseDesmonstracao, frmBaseDesmonstracao);
   Application.Run;
 end.
