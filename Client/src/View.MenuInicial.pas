@@ -68,8 +68,8 @@ implementation
 {$R *.dfm}
 
 uses
-  View.Unidades, System.JSON, Classe.Pluviometro, Charts.Types,
-  Classe.Aneometro, View.Pluviometro;
+  View.Unidades, System.JSON, View.Pluviometro, Charts.Types,
+  Classe.Aneometro;
 
 procedure TFrmMenuInicial.AtualizarRodape;
 begin
@@ -134,9 +134,7 @@ begin
 end;
 
 procedure TFrmMenuInicial.GerarAtualizarGraficoPluviometroMenuPrincipal;
-var
-  LPluviometro: TPluviometro;
-  LJsonStream: TStringStream;
+
 begin
   TTask.Run(
     procedure
@@ -146,13 +144,11 @@ begin
         TThread.Synchronize(TThread.CurrentThread,
           procedure
           var
-            LPluviometro: TPluviometro;
             LJsonStream: TStringStream;
           begin
-            LPluviometro := TPluviometro.Create;
+            LJsonStream := TStringStream.Create(TPluviometro.getLeituraDiaria
+              (FUnidade.ID, Date));
             Try
-              LJsonStream := TStringStream.Create(LPluviometro.getLeituraDiaria
-                (FUnidade.ID, Date));
               mtGraficoPluviometro.Close;
               mtGraficoPluviometro.LoadFromJSON(LJsonStream.DataString);
               mtGraficoPluviometro.Open();
@@ -168,7 +164,6 @@ begin
                 .LabelName('DATA_HORA').ValueName('MEDICAO').RGBName('0.0.0')
                 .&End.&End.&End.&End.WebBrowser(wbPluviometro).Generated;
             Finally
-              FreeAndNil(LPluviometro);
               FreeAndNil(LJsonStream);
             End;
           end);
@@ -207,13 +202,11 @@ end;
 
 procedure TFrmMenuInicial.GerarGraficoPluviometro;
 var
-  LPluviometro: TPluviometro;
   LJsonStream: TStringStream;
 begin
-  LPluviometro := TPluviometro.Create;
+  LJsonStream := TStringStream.Create
+    (TPluviometro.getLeituraDiaria(FUnidade.ID, Date));
   try
-    LJsonStream := TStringStream.Create
-      (LPluviometro.getLeituraDiaria(FUnidade.ID, Date));
     mtGraficoPluviometro.Close;
     mtGraficoPluviometro.LoadFromJSON(LJsonStream.DataString);
     mtGraficoPluviometro.Open();
@@ -228,14 +221,18 @@ begin
       .LabelName('DATA_HORA').ValueName('MEDICAO').RGBName('0.0.0')
       .&End.&End.&End.&End.WebBrowser(wbPluviometro).Generated;
   finally
-    FreeAndNil(LPluviometro);
     FreeAndNil(LJsonStream);
   end;
 end;
 
 procedure TFrmMenuInicial.miGraficoPluviometroClick(Sender: TObject);
 begin
-  frmPluviometro := T
+  Pluviometro := TPluviometro.Create(nil);
+  try
+    Pluviometro.ShowModal;
+  finally
+    FreeAndNil(Pluviometro);
+  end;
 end;
 
 procedure TFrmMenuInicial.miSairClick(Sender: TObject);
