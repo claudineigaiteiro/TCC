@@ -27,6 +27,10 @@ type
     PnlGraficoPluviometro: TPanel;
     wbPluviometro: TWebBrowser;
     BtnRodapeUnidades: TButton;
+    mtGraficoPluviometroID: TIntegerField;
+    mtGraficoPluviometroDATA_HORA: TDateTimeField;
+    mtGraficoPluviometroID_UNIDADE: TIntegerField;
+    mtGraficoPluviometroMEDICAO: TCurrencyField;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AtualizarRodape;

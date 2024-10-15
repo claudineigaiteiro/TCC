@@ -125,5 +125,17 @@ object FrmMenuInicial: TFrmMenuInicial
     UpdateOptions.AutoCommitUpdates = True
     Left = 504
     Top = 144
+    object mtGraficoPluviometroID: TIntegerField
+      FieldName = 'ID'
+    end
+    object mtGraficoPluviometroDATA_HORA: TDateTimeField
+      FieldName = 'DATA_HORA'
+    end
+    object mtGraficoPluviometroMEDICAO: TCurrencyField
+      FieldName = 'MEDICAO'
+    end
+    object mtGraficoPluviometroID_UNIDADE: TIntegerField
+      FieldName = 'ID_UNIDADE'
+    end
   end
 end
