@@ -51,6 +51,8 @@ type
   private
     FUnidade: TUnidade;
     FGrafico: TWebCharts;
+    FTransacaoAneometro: ITask;
+    FTransacaoPluviometro: ITask;
     procedure GerarAtualizarGraficoPluviometroMenuPrincipal;
     procedure GerarAtualizarGraficoAneometroMenuPrincipal;
     procedure GerarGraficoPluviometro;
@@ -87,13 +89,16 @@ end;
 
 procedure TFrmMenuInicial.FormDestroy(Sender: TObject);
 begin
+  FTransacaoAneometro.Cancel;
+  FTransacaoPluviometro.Cancel;
+
   If Assigned(FGrafico) then
     FreeAndNil(FGrafico);
 end;
 
 procedure TFrmMenuInicial.GerarAtualizarGraficoAneometroMenuPrincipal;
 begin
-  TTask.Run(
+  FTransacaoAneometro := TTask.Run(
     procedure
     begin
       while True do
@@ -135,7 +140,7 @@ end;
 procedure TFrmMenuInicial.GerarAtualizarGraficoPluviometroMenuPrincipal;
 
 begin
-  TTask.Run(
+  FTransacaoPluviometro := TTask.Run(
     procedure
     begin
       while True do
