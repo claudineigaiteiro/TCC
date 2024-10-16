@@ -30,6 +30,8 @@ type
   public
     property Unidade: TUnidade Write FUnidade;
     class function getLeituraDiaria(AIdUnidade: String; AData: TDate): String;
+    class function getLeituraPeriodo(AIdUnidade: String;
+      ADataInicio, ADataFim: TDate): String;
   end;
 
 var
@@ -62,7 +64,15 @@ begin
       end;
     1:
       begin
-        //
+        LJsonStream := TStringStream.Create(getLeituraPeriodo(FUnidade.ID,
+          tpDataInicio.Date, tpDataFim.Date));
+        Try
+          mtGrafico.Close;
+          mtGrafico.LoadFromJSON(LJsonStream.DataString);
+          mtGrafico.Open;
+        Finally
+          FreeAndNil(LJsonStream);
+        End;
       end;
   end;
   GerarGrafico;
@@ -105,6 +115,29 @@ begin
   LResponse := TRequest.New.BaseURL(LUrl)
     .AddBody(TJSONObject.Create.AddPair('data', LData))
     .Accept('application/json').Get;
+
+  Result := LResponse.Content;
+end;
+
+class function TPluviometro.getLeituraPeriodo(AIdUnidade: String;
+  ADataInicio, ADataFim: TDate): String;
+const
+  CUrl = 'http://localhost:9000/pluviometros/%s/periodo';
+var
+  LResponse: IResponse;
+  LUrl: String;
+  LDataInicio, LDataFim: String;
+begin
+  LDataInicio := DateToStr(ADataInicio);
+  LDataInicio := StringReplace(LDataInicio, '/', '.', [rfReplaceAll]);
+
+  LDataFim := DateToStr(ADataFim);
+  LDataFim := StringReplace(LDataFim, '/', '.', [rfReplaceAll]);
+
+  LUrl := Format(CUrl, [AIdUnidade]);
+  LResponse := TRequest.New.BaseURL(LUrl)
+    .AddBody(TJSONObject.Create.AddPair('data_inicio', LDataInicio)
+    .AddPair('data_fim', LDataFim)).Accept('application/json').Get;
 
   Result := LResponse.Content;
 end;
