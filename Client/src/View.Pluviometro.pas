@@ -10,16 +10,20 @@ uses
   System.Sensors.Components, Vcl.OleCtrls, SHDocVw, FireDAC.Stan.Intf,
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, Data.DB,
-  FireDAC.Comp.DataSet, FireDAC.Comp.Client;
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, Types, View.WebCharts;
 
 type
   TPluviometro = class(TfrmBaseDesmonstracao)
-    WebBrowser1: TWebBrowser;
+    wbGrafico: TWebBrowser;
     mtGrafico: TFDMemTable;
     procedure BtnGerarDadosClick(Sender: TObject);
   private
-    { Private declarations }
+    FUnidade: TUnidade;
+    FGrafico: TWebCharts;
+  protected
+    procedure GerarGrafico; override;
   public
+    property Unidade: TUnidade Write FUnidade;
     class function getLeituraDiaria(AIdUnidade: String; AData: TDate): String;
   end;
 
@@ -31,7 +35,7 @@ implementation
 {$R *.dfm}
 { TPluviometro }
 
-uses RESTRequest4D, System.JSON;
+uses RESTRequest4D, System.JSON, Charts.Types, DataSet.Serialize;
 
 procedure TPluviometro.BtnGerarDadosClick(Sender: TObject);
 var
@@ -41,20 +45,37 @@ begin
   case RgTipoBusca.ItemIndex of
     0:
       begin
-        LJsonStream := TStringStream.Create(getLeituraDiaria('1', tpDataInicio.Date));
+        LJsonStream := TStringStream.Create(getLeituraDiaria(FUnidade.ID,
+          tpDataInicio.Date));
         Try
           mtGrafico.Close;
-          mtGrafico.LoadFromStream(LJsonStream);
+          mtGrafico.LoadFromJSON(LJsonStream.DataString);
+          mtGrafico.Open;
         Finally
           FreeAndNil(LJsonStream);
         End;
-
       end;
     1:
       begin
-
+        //
       end;
   end;
+  GerarGrafico;
+end;
+
+procedure TPluviometro.GerarGrafico;
+begin
+  inherited;
+  If Assigned(FGrafico) Then
+    If Assigned(FGrafico) Then
+      FreeAndNil(FGrafico);
+
+  FGrafico := TWebCharts.Create;
+  FGrafico.NewProject.Charts._ChartType(line).Attributes.Name('Pluviometro')
+    .ColSpan(12).DataSet.DataSet(mtGrafico)
+    .textLabel('mm de chuva por hora do dia corrente').Fill(True)
+    .LabelName('DATA_HORA').ValueName('MEDICAO').RGBName('0.0.0')
+    .&End.&End.&End.&End.WebBrowser(wbGrafico).Generated;
 end;
 
 class function TPluviometro.getLeituraDiaria(AIdUnidade: String;

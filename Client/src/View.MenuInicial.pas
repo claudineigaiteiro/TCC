@@ -5,12 +5,12 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Classe.Unidade, Vcl.ExtCtrls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
   Vcl.StdCtrls, Vcl.Menus, System.Threading, FireDAC.Stan.Intf,
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.OleCtrls,
-  SHDocVw, DataSet.Serialize, View.WebCharts, Vcl.ComCtrls;
+  SHDocVw, DataSet.Serialize, View.WebCharts, Vcl.ComCtrls, Types;
 
 type
   TFrmMenuInicial = class(TForm)
@@ -87,7 +87,6 @@ end;
 
 procedure TFrmMenuInicial.FormDestroy(Sender: TObject);
 begin
-  FreeAndNil(FUnidade);
   If Assigned(FGrafico) then
     FreeAndNil(FGrafico);
 end;
@@ -229,6 +228,7 @@ procedure TFrmMenuInicial.miGraficoPluviometroClick(Sender: TObject);
 begin
   Pluviometro := TPluviometro.Create(nil);
   try
+    Pluviometro.Unidade := FUnidade;
     Pluviometro.ShowModal;
   finally
     FreeAndNil(Pluviometro);
@@ -245,8 +245,6 @@ begin
   FrmUnidades := TFrmUnidades.Create(nil);
   try
     FrmUnidades.ShowModal;
-    If Not Assigned(FUnidade) then
-      FUnidade := TUnidade.Create;
     FUnidade.ID := FrmUnidades.mtUnidades.FieldByName('ID').AsString;
     FUnidade.CODIGO := FrmUnidades.mtUnidades.FieldByName('CODIGO').AsString;
     FUnidade.NOME := FrmUnidades.mtUnidades.FieldByName('NOME').AsString;

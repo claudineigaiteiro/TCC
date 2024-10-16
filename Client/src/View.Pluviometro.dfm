@@ -11,7 +11,7 @@ inherited Pluviometro: TPluviometro
     ExplicitTop = 73
     ExplicitWidth = 624
     ExplicitHeight = 311
-    object WebBrowser1: TWebBrowser
+    object wbGrafico: TWebBrowser
       Left = 1
       Top = 1
       Width = 622

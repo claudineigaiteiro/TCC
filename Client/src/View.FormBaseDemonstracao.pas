@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
-  Vcl.WinXPickers, Vcl.ComCtrls, Vcl.Mask, Vcl.DBCtrls;
+  Vcl.WinXPickers, Vcl.ComCtrls, Vcl.Mask, Vcl.DBCtrls, Types;
 
 type
   TfrmBaseDesmonstracao = class(TForm)
@@ -24,10 +24,8 @@ type
     edtTotal: TDBEdit;
     PnlBody: TPanel;
     procedure RgTipoBuscaClick(Sender: TObject);
-  private
-    { Private declarations }
-  public
-    { Public declarations }
+  protected
+    procedure GerarGrafico; virtual; abstract;
   end;
 
 var
@@ -36,6 +34,7 @@ var
 implementation
 
 {$R *.dfm}
+
 
 procedure TfrmBaseDesmonstracao.RgTipoBuscaClick(Sender: TObject);
 begin
