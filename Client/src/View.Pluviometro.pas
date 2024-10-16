@@ -16,7 +16,12 @@ type
   TPluviometro = class(TfrmBaseDesmonstracao)
     wbGrafico: TWebBrowser;
     mtGrafico: TFDMemTable;
+    mtGraficoID: TIntegerField;
+    mtGraficoMEDICAO: TCurrencyField;
+    mtGraficoID_UNIDADE: TIntegerField;
+    mtGraficoDATA_HORA: TDateTimeField;
     procedure BtnGerarDadosClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     FUnidade: TUnidade;
     FGrafico: TWebCharts;
@@ -61,6 +66,13 @@ begin
       end;
   end;
   GerarGrafico;
+end;
+
+procedure TPluviometro.FormDestroy(Sender: TObject);
+begin
+  inherited;
+  If Assigned(FGrafico) Then
+    FreeAndNil(FGrafico);
 end;
 
 procedure TPluviometro.GerarGrafico;

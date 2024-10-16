@@ -1,5 +1,6 @@
 inherited Pluviometro: TPluviometro
   Caption = 'Pluviometro'
+  OnDestroy = FormDestroy
   TextHeight = 15
   inherited PnlHeader: TPanel
     inherited BtnGerarDados: TButton
@@ -36,5 +37,17 @@ inherited Pluviometro: TPluviometro
     UpdateOptions.AutoCommitUpdates = True
     Left = 544
     Top = 152
+    object mtGraficoID: TIntegerField
+      FieldName = 'ID'
+    end
+    object mtGraficoMEDICAO: TCurrencyField
+      FieldName = 'MEDICAO'
+    end
+    object mtGraficoID_UNIDADE: TIntegerField
+      FieldName = 'ID_UNIDADE'
+    end
+    object mtGraficoDATA_HORA: TDateTimeField
+      FieldName = 'DATA_HORA'
+    end
   end
 end

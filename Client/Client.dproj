@@ -135,17 +135,16 @@
             <Form>FrmUnidades</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="src\Classe.Unidade.pas"/>
-        <DCCReference Include="src\Classe.Pluviometro.pas"/>
         <DCCReference Include="src\Classe.Aneometro.pas"/>
         <DCCReference Include="src\View.FormBaseDemonstracao.pas">
             <Form>frmBaseDesmonstracao</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="src\View.Pluviometro.pas">
-            <Form>frmBaseDesmonstracao1</Form>
+            <Form>Pluviometro</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="src\Types.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
