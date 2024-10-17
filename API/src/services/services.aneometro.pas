@@ -18,6 +18,8 @@ type
     qryAneometroID_UNIDADE: TIntegerField;
     qryUnidade: TFDQuery;
     qryAneometroDATA_HORA: TSQLTimeStampField;
+    qryMediaAneometro: TFDQuery;
+    qryMediaAneometroVELOCIDADE_MEDIA: TFMTBCDField;
   private
     { Private declarations }
   public
@@ -26,6 +28,8 @@ type
     function GetByPeriodo(const AId: Int64; ADataInicio, ADataFim: TDate)
       : TFDQuery;
     function GetByDia(const AId: Int64; AHoraInicio, AHoraFim: TDateTime)
+      : TFDQuery;
+    function GetMediaByDia(const AId: Int64; AHoraInicio, AHoraFim: TDateTime)
       : TFDQuery;
   end;
 
@@ -92,6 +96,28 @@ begin
   qryAneometro.ParamByName('data_inicio').AsDate := ADataInicio;
   qryAneometro.ParamByName('data_fim').AsDate := ADataFim;
   qryAneometro.Open();
+end;
+
+function Tservices_aneometro.GetMediaByDia(const AId: Int64;
+  AHoraInicio, AHoraFim: TDateTime): TFDQuery;
+const
+  CSql =
+    'SELECT COALESCE(SUM(A.VELOCIDADE), 0)/24 AS VELOCIDADE_MEDIA ' + #13 +
+    '  FROM ANEOMETRO A ' + #13 +
+    ' WHERE A.DATA_HORA >= CAST(:hora_inicio AS TIMESTAMP) ' + #13 +
+    '   AND A.DATA_HORA < CAST(:hora_fim AS TIMESTAMP) ' + #13 +
+    '   AND A.ID_UNIDADE = :id ';
+begin
+  Result := qryMediaAneometro;
+
+  qryMediaAneometro.SQL.Clear;
+  qryMediaAneometro.SQL.Add(CSQL);
+
+  qryMediaAneometro.ParamByName('id').AsLargeInt := AId;
+  qryMediaAneometro.ParamByName('hora_inicio').AsDateTime := AHoraInicio;
+  qryMediaAneometro.ParamByName('hora_fim').AsDateTime := AHoraFim;
+
+  qryMediaAneometro.Open;
 end;
 
 function Tservices_aneometro.Insert(const AAneometro: TJSONObject): TFDQuery;

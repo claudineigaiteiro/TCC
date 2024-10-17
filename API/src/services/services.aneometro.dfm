@@ -1,5 +1,5 @@
 inherited services_aneometro: Tservices_aneometro
-  Height = 183
+  Height = 290
   Width = 263
   object qryAneometro: TFDQuery
     Connection = fdConecxao
@@ -40,5 +40,24 @@ inherited services_aneometro: Tservices_aneometro
       '  FROM UNIDADES')
     Left = 136
     Top = 96
+  end
+  object qryMediaAneometro: TFDQuery
+    Connection = fdConecxao
+    SQL.Strings = (
+      'SELECT '
+      '    COALESCE(SUM(A.VELOCIDADE), 0)/24 AS VELOCIDADE_MEDIA'
+      'FROM '
+      '    ANEOMETRO A')
+    Left = 136
+    Top = 168
+    object qryMediaAneometroVELOCIDADE_MEDIA: TFMTBCDField
+      AutoGenerateValue = arDefault
+      FieldName = 'VELOCIDADE_MEDIA'
+      Origin = 'VELOCIDADE_MEDIA'
+      ProviderFlags = []
+      ReadOnly = True
+      Precision = 18
+      Size = 2
+    end
   end
 end
