@@ -23,8 +23,12 @@ type
     mtMedia: TFDMemTable;
     dsMedia: TDataSource;
     mtMediaMEDICAO_MEDIA: TFloatField;
+    mtTotal: TFDMemTable;
+    mtTotalMEDICAO_TOTAL: TFloatField;
+    dsTotal: TDataSource;
     procedure BtnGerarDadosClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure RgTipoBuscaClick(Sender: TObject);
   private
     FUnidade: TUnidade;
     FGrafico: TWebCharts;
@@ -36,6 +40,7 @@ type
     class function getLeituraPeriodo(AIdUnidade: String;
       ADataInicio, ADataFim: TDate): String;
     class function getMedia(AIdUnidade: String; AData: TDate): String;
+    class function getTotal(AIdUnidade: String; AData: TDate): String;
   end;
 
 var
@@ -66,12 +71,22 @@ begin
           FreeAndNil(LJsonStream);
         End;
 
-        LJsonStream := TStringStream.Create(getMedia(FUnidade.ID,
-          tpDataInicio.Date));
+        LJsonStream := TStringStream.Create
+          (getMedia(FUnidade.ID, tpDataInicio.Date));
         Try
           mtMedia.Close;
           mtMedia.LoadFromJSON(LJsonStream.DataString);
           mtMedia.Open;
+        Finally
+          FreeAndNil(LJsonStream);
+        End;
+
+        LJsonStream := TStringStream.Create
+          (getTotal(FUnidade.ID, tpDataInicio.Date));
+        Try
+          mtTotal.Close;
+          mtTotal.LoadFromJSON(LJsonStream.DataString);
+          mtTotal.Open;
         Finally
           FreeAndNil(LJsonStream);
         End;
@@ -173,6 +188,42 @@ begin
     .Accept('application/json').Get;
 
   Result := LResponse.Content;
+end;
+
+class function TPluviometro.getTotal(AIdUnidade: String; AData: TDate): String;
+const
+  CUrl = 'http://localhost:9000/pluviometros/%s/total/dia';
+var
+  LResponse: IResponse;
+  LUrl: String;
+  LData: String;
+begin
+  LData := DateToStr(AData);
+  LData := StringReplace(LData, '/', '.', [rfReplaceAll]);
+  LUrl := Format(CUrl, [AIdUnidade]);
+  LResponse := TRequest.New.BaseURL(LUrl)
+    .AddBody(TJSONObject.Create.AddPair('data', LData))
+    .Accept('application/json').Get;
+
+  Result := LResponse.Content;
+end;
+
+procedure TPluviometro.RgTipoBuscaClick(Sender: TObject);
+begin
+  inherited;
+  mtGrafico.Close;
+  mtGrafico.Cancel;
+  mtGrafico.Open;
+
+  mtMedia.Close;
+  mtMedia.Cancel;
+  mtMedia.Open;
+
+  mtTotal.Close;
+  mtTotal.Cancel;
+  mtTotal.Open;
+
+  GerarGrafico;
 end;
 
 end.

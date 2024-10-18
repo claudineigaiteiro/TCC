@@ -12,6 +12,10 @@ inherited Pluviometro: TPluviometro
       DataField = 'MEDICAO_MEDIA'
       DataSource = dsMedia
     end
+    inherited edtTotal: TDBEdit
+      DataField = 'MEDICAO_TOTAL'
+      DataSource = dsTotal
+    end
   end
   inherited PnlBody: TPanel
     object wbGrafico: TWebBrowser
@@ -70,5 +74,24 @@ inherited Pluviometro: TPluviometro
     DataSet = mtMedia
     Left = 472
     Top = 232
+  end
+  object mtTotal: TFDMemTable
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 544
+    Top = 296
+    object mtTotalMEDICAO_TOTAL: TFloatField
+      FieldName = 'MEDICAO_TOTAL'
+    end
+  end
+  object dsTotal: TDataSource
+    DataSet = mtTotal
+    Left = 464
+    Top = 304
   end
 end
