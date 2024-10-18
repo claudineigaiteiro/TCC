@@ -124,7 +124,7 @@ begin
               FGrafico.NewProject.Charts._ChartType(line)
                 .Attributes.Name('Pluviometro').ColSpan(12)
                 .DataSet.DataSet(mtGraficoAneometro)
-                .textLabel('mm de chuva por hora do dia corrente').Fill(True)
+                .textLabel('Velocidade do vento por hora do dia corrente').Fill(True)
                 .LabelName('DATA_HORA').ValueName('VELOCIDADE').RGBName('0.0.0')
                 .&End.&End.&End.&End.WebBrowser(wbAneometro).Generated;
             Finally
@@ -195,7 +195,7 @@ begin
     FGrafico := TWebCharts.Create;
     FGrafico.NewProject.Charts._ChartType(line).Attributes.Name('Pluviometro')
       .ColSpan(12).DataSet.DataSet(mtGraficoAneometro)
-      .textLabel('mm de chuva por hora do dia corrente').Fill(True)
+      .textLabel('Velocidade do vento por hora do dia corrente').Fill(True)
       .LabelName('DATA_HORA').ValueName('VELOCIDADE').RGBName('0.0.0')
       .&End.&End.&End.&End.WebBrowser(wbAneometro).Generated;
   finally

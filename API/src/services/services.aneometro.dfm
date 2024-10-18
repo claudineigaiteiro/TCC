@@ -44,7 +44,7 @@ inherited services_aneometro: Tservices_aneometro
   object qryMediaAneometro: TFDQuery
     Connection = fdConecxao
     SQL.Strings = (
-      'SELECT '
+      'SELECT'
       '    COALESCE(SUM(A.VELOCIDADE), 0)/24 AS VELOCIDADE_MEDIA'
       'FROM '
       '    ANEOMETRO A')

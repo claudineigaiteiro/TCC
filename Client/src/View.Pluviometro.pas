@@ -20,6 +20,7 @@ type
     mtGraficoMEDICAO: TCurrencyField;
     mtGraficoID_UNIDADE: TIntegerField;
     mtGraficoDATA_HORA: TDateTimeField;
+    mtMedia: TFDMemTable;
     procedure BtnGerarDadosClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
   private

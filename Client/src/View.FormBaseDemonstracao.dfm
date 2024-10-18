@@ -97,6 +97,7 @@ object frmBaseDesmonstracao: TfrmBaseDesmonstracao
       Width = 28
       Height = 15
       Caption = 'Total:'
+      Visible = False
     end
     object edtMedia: TDBEdit
       Left = 9
@@ -111,6 +112,7 @@ object frmBaseDesmonstracao: TfrmBaseDesmonstracao
       Width = 121
       Height = 23
       TabOrder = 1
+      Visible = False
     end
   end
   object PnlBody: TPanel
@@ -120,9 +122,5 @@ object frmBaseDesmonstracao: TfrmBaseDesmonstracao
     Height = 311
     Align = alClient
     TabOrder = 2
-    ExplicitLeft = 232
-    ExplicitTop = 224
-    ExplicitWidth = 185
-    ExplicitHeight = 41
   end
 end

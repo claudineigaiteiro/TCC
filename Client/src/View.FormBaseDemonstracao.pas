@@ -35,7 +35,6 @@ implementation
 
 {$R *.dfm}
 
-
 procedure TfrmBaseDesmonstracao.RgTipoBuscaClick(Sender: TObject);
 begin
   case RgTipoBusca.ItemIndex of
@@ -45,6 +44,9 @@ begin
         LblDataFim.Visible := False;
         tpDataFim.Visible := False;
         lblMedia.Caption := 'Média/Hora:';
+
+        edtTotal.Visible := False;
+        LblTotal.Visible := False;
       end;
     1:
       begin
@@ -52,6 +54,9 @@ begin
         LblDataFim.Visible := True;
         tpDataFim.Visible := True;
         lblMedia.Caption := 'Média/Dia:';
+
+        edtTotal.Visible := True;
+        LblTotal.Visible := True;
       end;
   end;
 end;
