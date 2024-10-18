@@ -21,6 +21,9 @@ type
     qryMediaDia: TFDQuery;
     qryMediaDiaID: TIntegerField;
     qryMediaDiaMEDICAO_MEDIA: TFMTBCDField;
+    qryTotalDia: TFDQuery;
+    qryTotalDiaID: TIntegerField;
+    qryTotalDiaMEDICAO_TOTAL: TFMTBCDField;
   private
     { Private declarations }
   public
@@ -32,6 +35,7 @@ type
       : TFDQuery;
     function GetMediaDia(const AId: Int64; AHoraInicio, AHoraFim: TDateTime)
       : TFDQuery;
+    function GetTotalDia(const AId: Int64; AHoraInicio, AHoraFim: TDateTime): TFDQuery;
   end;
 
 var
@@ -120,6 +124,28 @@ begin
   qryMediaDia.ParamByName('hora_fim').AsDateTime := AHoraFim;
 
   qryMediaDia.Open;
+end;
+
+function Tservices_pluviometro.GetTotalDia(const AId: Int64; AHoraInicio, AHoraFim: TDateTime): TFDQuery;
+const
+  CSql =
+    'SELECT 0 AS ID, ' + #13 +
+    'COALESCE(SUM(P.MEDICAO), 0) AS MEDICAO_TOTAL ' + #13 +
+    '  FROM PLUVIOMETRO P ' + #13 +
+    ' WHERE P.DATA_HORA >= CAST(:hora_inicio AS TIMESTAMP) ' + #13 +
+    '   AND P.DATA_HORA < CAST(:hora_fim AS TIMESTAMP) ' + #13 +
+    '   AND P.ID_UNIDADE = :id ';
+begin
+  Result := qryTotalDia;
+
+  qryTotalDia.SQL.Clear;
+  qryTotalDia.SQL.Add(CSQL);
+
+  qryTotalDia.ParamByName('id').AsLargeInt := AId;
+  qryTotalDia.ParamByName('hora_inicio').AsDateTime := AHoraInicio;
+  qryTotalDia.ParamByName('hora_fim').AsDateTime := AHoraFim;
+
+  qryTotalDia.Open;
 end;
 
 function Tservices_pluviometro.Insert(const APluviometro: TJSONObject)
