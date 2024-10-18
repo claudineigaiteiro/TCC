@@ -7,6 +7,12 @@ inherited Pluviometro: TPluviometro
       OnClick = BtnGerarDadosClick
     end
   end
+  inherited pnlFooter: TPanel
+    inherited edtMedia: TDBEdit
+      DataField = 'MEDICAO_MEDIA'
+      DataSource = dsMedia
+    end
+  end
   inherited PnlBody: TPanel
     object wbGrafico: TWebBrowser
       Left = 1
@@ -55,6 +61,14 @@ inherited Pluviometro: TPluviometro
     UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
     Left = 544
+    Top = 232
+    object mtMediaMEDICAO_MEDIA: TFloatField
+      FieldName = 'MEDICAO_MEDIA'
+    end
+  end
+  object dsMedia: TDataSource
+    DataSet = mtMedia
+    Left = 472
     Top = 232
   end
 end

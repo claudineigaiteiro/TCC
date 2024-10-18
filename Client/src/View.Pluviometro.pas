@@ -21,6 +21,8 @@ type
     mtGraficoID_UNIDADE: TIntegerField;
     mtGraficoDATA_HORA: TDateTimeField;
     mtMedia: TFDMemTable;
+    dsMedia: TDataSource;
+    mtMediaMEDICAO_MEDIA: TFloatField;
     procedure BtnGerarDadosClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
   private
@@ -63,6 +65,17 @@ begin
         Finally
           FreeAndNil(LJsonStream);
         End;
+
+        LJsonStream := TStringStream.Create(getMedia(FUnidade.ID,
+          tpDataInicio.Date));
+        Try
+          mtMedia.Close;
+          mtMedia.LoadFromJSON(LJsonStream.DataString);
+          mtMedia.Open;
+        Finally
+          FreeAndNil(LJsonStream);
+        End;
+
       end;
     1:
       begin
@@ -145,8 +158,21 @@ begin
 end;
 
 class function TPluviometro.getMedia(AIdUnidade: String; AData: TDate): String;
+const
+  CUrl = 'http://localhost:9000/pluviometros/%s/media/dia';
+var
+  LResponse: IResponse;
+  LUrl: String;
+  LData: String;
 begin
+  LData := DateToStr(AData);
+  LData := StringReplace(LData, '/', '.', [rfReplaceAll]);
+  LUrl := Format(CUrl, [AIdUnidade]);
+  LResponse := TRequest.New.BaseURL(LUrl)
+    .AddBody(TJSONObject.Create.AddPair('data', LData))
+    .Accept('application/json').Get;
 
+  Result := LResponse.Content;
 end;
 
 end.

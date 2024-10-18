@@ -46,10 +46,27 @@ inherited services_pluviometro: Tservices_pluviometro
     Connection = fdConecxao
     SQL.Strings = (
       'SELECT'
+      '    0 AS ID,'
       '    COALESCE(SUM(P.MEDICAO), 0)/24 AS MEDICAO_MEDIA'
       'FROM '
       '    PLUVIOMETRO P')
     Left = 168
     Top = 176
+    object qryMediaDiaID: TIntegerField
+      AutoGenerateValue = arDefault
+      FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInKey]
+      ReadOnly = True
+    end
+    object qryMediaDiaMEDICAO_MEDIA: TFMTBCDField
+      AutoGenerateValue = arDefault
+      FieldName = 'MEDICAO_MEDIA'
+      Origin = 'MEDICAO_MEDIA'
+      ProviderFlags = []
+      ReadOnly = True
+      Precision = 18
+      Size = 2
+    end
   end
 end

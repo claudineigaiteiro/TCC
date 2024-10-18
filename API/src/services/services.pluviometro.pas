@@ -19,6 +19,8 @@ type
     qryUnidade: TFDQuery;
     qryPluviometroDATA_HORA: TSQLTimeStampField;
     qryMediaDia: TFDQuery;
+    qryMediaDiaID: TIntegerField;
+    qryMediaDiaMEDICAO_MEDIA: TFMTBCDField;
   private
     { Private declarations }
   public
@@ -101,7 +103,8 @@ end;
 function Tservices_pluviometro.GetMediaDia(const AId: Int64; AHoraInicio, AHoraFim: TDateTime): TFDQuery;
 const
   CSql =
-    'SELECT COALESCE(SUM(P.MEDICAO), 0)/24 AS MEDICAO_MEDIA ' + #13 +
+    'SELECT 0 AS ID, ' + #13 +
+    'COALESCE(SUM(P.MEDICAO), 0)/24 AS MEDICAO_MEDIA ' + #13 +
     '  FROM PLUVIOMETRO P ' + #13 +
     ' WHERE P.DATA_HORA >= CAST(:hora_inicio AS TIMESTAMP) ' + #13 +
     '   AND P.DATA_HORA < CAST(:hora_fim AS TIMESTAMP) ' + #13 +
