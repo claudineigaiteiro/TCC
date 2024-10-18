@@ -8,10 +8,6 @@ inherited Pluviometro: TPluviometro
     end
   end
   inherited PnlBody: TPanel
-    ExplicitLeft = 0
-    ExplicitTop = 73
-    ExplicitWidth = 624
-    ExplicitHeight = 311
     object wbGrafico: TWebBrowser
       Left = 1
       Top = 1

@@ -18,6 +18,7 @@ type
     qryPluviometroID_UNIDADE: TIntegerField;
     qryUnidade: TFDQuery;
     qryPluviometroDATA_HORA: TSQLTimeStampField;
+    qryMediaDia: TFDQuery;
   private
     { Private declarations }
   public
@@ -26,6 +27,8 @@ type
     function GetByPeriodo(const AId: Int64; ADataInicio, ADataFim: TDate)
       : TFDQuery;
     function GetByDia(const AId: Int64; AHoraInicio, AHoraFim: TDateTime)
+      : TFDQuery;
+    function GetMediaDia(const AId: Int64; AHoraInicio, AHoraFim: TDateTime)
       : TFDQuery;
   end;
 
@@ -44,24 +47,18 @@ uses DataSet.Serialize;
 function Tservices_pluviometro.GetByDia(const AId: Int64;
   AHoraInicio, AHoraFim: TDateTime): TFDQuery;
 const
-  CSQL =
-    'WITH RECURSIVE HORAS AS ( ' + #13 +
+  CSQL = 'WITH RECURSIVE HORAS AS ( ' + #13 +
     '   SELECT CAST(:hora_inicio AS TIMESTAMP) AS DATA_HORA ' + #13 +
-    '     FROM RDB$DATABASE ' + #13 +
-    '    UNION ALL ' + #13 +
-    '   SELECT DATEADD(1 HOUR TO DATA_HORA) ' + #13 +
-    '     FROM HORAS ' + #13 +
-    '    WHERE DATA_HORA < CAST(:hora_fim AS TIMESTAMP) ' + #13 +
-    ') ' + #13 +
-    'SELECT 0 AS ID, ' + #13 +
-    '       H.DATA_HORA, ' + #13 +
+    '     FROM RDB$DATABASE ' + #13 + '    UNION ALL ' + #13 +
+    '   SELECT DATEADD(1 HOUR TO DATA_HORA) ' + #13 + '     FROM HORAS ' + #13 +
+    '    WHERE DATA_HORA < CAST(:hora_fim AS TIMESTAMP) ' + #13 + ') ' + #13 +
+    'SELECT 0 AS ID, ' + #13 + '       H.DATA_HORA, ' + #13 +
     '       COALESCE(SUM(P.MEDICAO), 0) AS MEDICAO, ' + #13 +
-    '       0 AS ID_UNIDADE ' + #13 +
-    '  FROM HORAS H ' + #13 +
+    '       0 AS ID_UNIDADE ' + #13 + '  FROM HORAS H ' + #13 +
     '  LEFT JOIN PLUVIOMETRO P ' + #13 +
-    '    ON P.DATA_HORA BETWEEN H.DATA_HORA AND DATEADD(1 HOUR TO H.DATA_HORA) ' + #13 +
-    '       AND P.ID_UNIDADE = :id ' + #13 + ' GROUP BY H.DATA_HORA ' + #13 +
-    ' ORDER BY H.DATA_HORA ';
+    '    ON P.DATA_HORA BETWEEN H.DATA_HORA AND DATEADD(1 HOUR TO H.DATA_HORA) '
+    + #13 + '       AND P.ID_UNIDADE = :id ' + #13 + ' GROUP BY H.DATA_HORA ' +
+    #13 + ' ORDER BY H.DATA_HORA ';
 
 begin
   Result := qryPluviometro;
@@ -90,7 +87,7 @@ Const
     ' ORDER BY C.DATA ';
 
 begin
-  result := qryPluviometro;
+  Result := qryPluviometro;
   qryPluviometro.SQL.Clear;;
 
   qryPluviometro.SQL.Add(CSQL);
@@ -99,6 +96,27 @@ begin
   qryPluviometro.ParamByName('data_inicio').AsDate := ADataInicio;
   qryPluviometro.ParamByName('data_fim').AsDate := ADataFim;
   qryPluviometro.Open();
+end;
+
+function Tservices_pluviometro.GetMediaDia(const AId: Int64; AHoraInicio, AHoraFim: TDateTime): TFDQuery;
+const
+  CSql =
+    'SELECT COALESCE(SUM(P.MEDICAO), 0)/24 AS MEDICAO_MEDIA ' + #13 +
+    '  FROM PLUVIOMETRO P ' + #13 +
+    ' WHERE P.DATA_HORA >= CAST(:hora_inicio AS TIMESTAMP) ' + #13 +
+    '   AND P.DATA_HORA < CAST(:hora_fim AS TIMESTAMP) ' + #13 +
+    '   AND P.ID_UNIDADE = :id ';
+begin
+  Result := qryMediaDia;
+
+  qryMediaDia.SQL.Clear;
+  qryMediaDia.SQL.Add(CSQL);
+
+  qryMediaDia.ParamByName('id').AsLargeInt := AId;
+  qryMediaDia.ParamByName('hora_inicio').AsDateTime := AHoraInicio;
+  qryMediaDia.ParamByName('hora_fim').AsDateTime := AHoraFim;
+
+  qryMediaDia.Open;
 end;
 
 function Tservices_pluviometro.Insert(const APluviometro: TJSONObject)
@@ -117,7 +135,7 @@ begin
     APluviometro.RemovePair('chave');
     APluviometro.AddPair('ID_UNIDADE', qryUnidade.FieldByName('ID').Text);
 
-    result := qryPluviometro;
+    Result := qryPluviometro;
     qryPluviometro.SQL.Add('WHERE 1 <> 1');
     qryPluviometro.Open();
     qryPluviometro.LoadFromJSON(APluviometro, False);

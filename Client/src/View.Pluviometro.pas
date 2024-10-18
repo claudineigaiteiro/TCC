@@ -33,6 +33,7 @@ type
     class function getLeituraDiaria(AIdUnidade: String; AData: TDate): String;
     class function getLeituraPeriodo(AIdUnidade: String;
       ADataInicio, ADataFim: TDate): String;
+    class function getMedia(AIdUnidade: String; AData: TDate): String;
   end;
 
 var
@@ -141,6 +142,11 @@ begin
     .AddPair('data_fim', LDataFim)).Accept('application/json').Get;
 
   Result := LResponse.Content;
+end;
+
+class function TPluviometro.getMedia(AIdUnidade: String; AData: TDate): String;
+begin
+
 end;
 
 end.

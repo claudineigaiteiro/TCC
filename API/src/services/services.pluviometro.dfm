@@ -1,5 +1,5 @@
 inherited services_pluviometro: Tservices_pluviometro
-  Height = 181
+  Height = 266
   Width = 303
   object qryPluviometro: TFDQuery
     Active = True
@@ -41,5 +41,15 @@ inherited services_pluviometro: Tservices_pluviometro
       '  FROM UNIDADES')
     Left = 168
     Top = 96
+  end
+  object qryMediaDia: TFDQuery
+    Connection = fdConecxao
+    SQL.Strings = (
+      'SELECT'
+      '    COALESCE(SUM(P.MEDICAO), 0)/24 AS MEDICAO_MEDIA'
+      'FROM '
+      '    PLUVIOMETRO P')
+    Left = 168
+    Top = 176
   end
 end
