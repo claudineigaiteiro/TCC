@@ -42,7 +42,7 @@ inherited services_pluviometro: Tservices_pluviometro
     Left = 168
     Top = 96
   end
-  object qryMediaDia: TFDQuery
+  object qryMedia: TFDQuery
     Connection = fdConecxao
     SQL.Strings = (
       'SELECT'
@@ -52,14 +52,14 @@ inherited services_pluviometro: Tservices_pluviometro
       '    PLUVIOMETRO P')
     Left = 168
     Top = 176
-    object qryMediaDiaID: TIntegerField
+    object qryMediaID: TIntegerField
       AutoGenerateValue = arDefault
       FieldName = 'ID'
       Origin = 'ID'
       ProviderFlags = [pfInKey]
       ReadOnly = True
     end
-    object qryMediaDiaMEDICAO_MEDIA: TFMTBCDField
+    object qryMediaMEDICAO_MEDIA: TFMTBCDField
       AutoGenerateValue = arDefault
       FieldName = 'MEDICAO_MEDIA'
       Origin = 'MEDICAO_MEDIA'
@@ -69,7 +69,7 @@ inherited services_pluviometro: Tservices_pluviometro
       Size = 2
     end
   end
-  object qryTotalDia: TFDQuery
+  object qryTotal: TFDQuery
     Connection = fdConecxao
     SQL.Strings = (
       'SELECT'
@@ -77,16 +77,16 @@ inherited services_pluviometro: Tservices_pluviometro
       '    COALESCE(SUM(P.MEDICAO), 0) AS MEDICAO_TOTAL'
       'FROM '
       '    PLUVIOMETRO P')
-    Left = 176
-    Top = 256
-    object qryTotalDiaID: TIntegerField
+    Left = 168
+    Top = 248
+    object qryTotalID: TIntegerField
       AutoGenerateValue = arDefault
       FieldName = 'ID'
       Origin = 'ID'
       ProviderFlags = [pfInKey]
       ReadOnly = True
     end
-    object qryTotalDiaMEDICAO_TOTAL: TFMTBCDField
+    object qryTotalMEDICAO_TOTAL: TFMTBCDField
       AutoGenerateValue = arDefault
       FieldName = 'MEDICAO_TOTAL'
       Origin = 'MEDICAO_TOTAL'

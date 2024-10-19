@@ -18,12 +18,12 @@ type
     qryPluviometroID_UNIDADE: TIntegerField;
     qryUnidade: TFDQuery;
     qryPluviometroDATA_HORA: TSQLTimeStampField;
-    qryMediaDia: TFDQuery;
-    qryMediaDiaID: TIntegerField;
-    qryMediaDiaMEDICAO_MEDIA: TFMTBCDField;
-    qryTotalDia: TFDQuery;
-    qryTotalDiaID: TIntegerField;
-    qryTotalDiaMEDICAO_TOTAL: TFMTBCDField;
+    qryMedia: TFDQuery;
+    qryMediaID: TIntegerField;
+    qryMediaMEDICAO_MEDIA: TFMTBCDField;
+    qryTotal: TFDQuery;
+    qryTotalID: TIntegerField;
+    qryTotalMEDICAO_TOTAL: TFMTBCDField;
   private
     { Private declarations }
   public
@@ -35,7 +35,10 @@ type
       : TFDQuery;
     function GetMediaDia(const AId: Int64; AHoraInicio, AHoraFim: TDateTime)
       : TFDQuery;
-    function GetTotalDia(const AId: Int64; AHoraInicio, AHoraFim: TDateTime): TFDQuery;
+    function GetTotalDia(const AId: Int64; AHoraInicio, AHoraFim: TDateTime)
+      : TFDQuery;
+    function GetMediaPeriodo(const AId: Int64; ADataInicio, ADataFim: TDateTime)
+      : TFDQuery;
   end;
 
 var
@@ -104,48 +107,74 @@ begin
   qryPluviometro.Open();
 end;
 
-function Tservices_pluviometro.GetMediaDia(const AId: Int64; AHoraInicio, AHoraFim: TDateTime): TFDQuery;
+function Tservices_pluviometro.GetMediaDia(const AId: Int64;
+  AHoraInicio, AHoraFim: TDateTime): TFDQuery;
 const
-  CSql =
-    'SELECT 0 AS ID, ' + #13 +
+  CSQL = 'SELECT 0 AS ID, ' + #13 +
     'COALESCE(SUM(P.MEDICAO), 0)/24 AS MEDICAO_MEDIA ' + #13 +
     '  FROM PLUVIOMETRO P ' + #13 +
     ' WHERE P.DATA_HORA >= CAST(:hora_inicio AS TIMESTAMP) ' + #13 +
     '   AND P.DATA_HORA < CAST(:hora_fim AS TIMESTAMP) ' + #13 +
     '   AND P.ID_UNIDADE = :id ';
 begin
-  Result := qryMediaDia;
+  Result := qryMedia;
 
-  qryMediaDia.SQL.Clear;
-  qryMediaDia.SQL.Add(CSQL);
+  qryMedia.SQL.Clear;
+  qryMedia.SQL.Add(CSQL);
 
-  qryMediaDia.ParamByName('id').AsLargeInt := AId;
-  qryMediaDia.ParamByName('hora_inicio').AsDateTime := AHoraInicio;
-  qryMediaDia.ParamByName('hora_fim').AsDateTime := AHoraFim;
+  qryMedia.ParamByName('id').AsLargeInt := AId;
+  qryMedia.ParamByName('hora_inicio').AsDateTime := AHoraInicio;
+  qryMedia.ParamByName('hora_fim').AsDateTime := AHoraFim;
 
-  qryMediaDia.Open;
+  qryMedia.Open;
 end;
 
-function Tservices_pluviometro.GetTotalDia(const AId: Int64; AHoraInicio, AHoraFim: TDateTime): TFDQuery;
+function Tservices_pluviometro.GetMediaPeriodo(const AId: Int64;
+  ADataInicio, ADataFim: TDateTime): TFDQuery;
 const
-  CSql =
+  CSQL = 'WITH RECURSIVE HORAS AS ( ' + #13 +
+    ' SELECT CAST(:data_inicio AS TIMESTAMP) AS DATA_HORA ' + #13 +
+    '   FROM RDB$DATABASE ' + #13 + '  UNION ALL ' + #13 +
+    ' SELECT DATEADD(1 HOUR TO DATA_HORA) ' + #13 + '   FROM HORAS ' + #13 +
+    '  WHERE DATA_HORA < CAST(:data_fim AS TIMESTAMP) ' + #13 + ') ' + #13 +
     'SELECT 0 AS ID, ' + #13 +
+    'COALESCE(SUM(P.MEDICAO), 0) / COUNT(DISTINCT CAST(H.DATA_HORA AS DATE)) AS MEDICAO_MEDIA '
+    + #13 + '  FROM HORAS H ' + #13 + '  LEFT JOIN PLUVIOMETRO P ' + #13 +
+    '    ON P.DATA_HORA >= H.DATA_HORA ' + #13 +
+    '   AND P.DATA_HORA < DATEADD(1 HOUR TO H.DATA_HORA) ' + #13 +
+    '   AND P.ID_UNIDADE = :id_unidade ';
+begin
+  Result := qryMedia;
+  qryMedia.SQL.Clear;;
+
+  qryMedia.SQL.Add(CSQL);
+
+  qryMedia.ParamByName('id_unidade').AsLargeInt := AId;
+  qryMedia.ParamByName('data_inicio').AsDate := ADataInicio;
+  qryMedia.ParamByName('data_fim').AsDate := ADataFim;
+  qryMedia.Open();
+end;
+
+function Tservices_pluviometro.GetTotalDia(const AId: Int64;
+  AHoraInicio, AHoraFim: TDateTime): TFDQuery;
+const
+  CSQL = 'SELECT 0 AS ID, ' + #13 +
     'COALESCE(SUM(P.MEDICAO), 0) AS MEDICAO_TOTAL ' + #13 +
     '  FROM PLUVIOMETRO P ' + #13 +
     ' WHERE P.DATA_HORA >= CAST(:hora_inicio AS TIMESTAMP) ' + #13 +
     '   AND P.DATA_HORA < CAST(:hora_fim AS TIMESTAMP) ' + #13 +
     '   AND P.ID_UNIDADE = :id ';
 begin
-  Result := qryTotalDia;
+  Result := qryTotal;
 
-  qryTotalDia.SQL.Clear;
-  qryTotalDia.SQL.Add(CSQL);
+  qryTotal.SQL.Clear;
+  qryTotal.SQL.Add(CSQL);
 
-  qryTotalDia.ParamByName('id').AsLargeInt := AId;
-  qryTotalDia.ParamByName('hora_inicio').AsDateTime := AHoraInicio;
-  qryTotalDia.ParamByName('hora_fim').AsDateTime := AHoraFim;
+  qryTotal.ParamByName('id').AsLargeInt := AId;
+  qryTotal.ParamByName('hora_inicio').AsDateTime := AHoraInicio;
+  qryTotal.ParamByName('hora_fim').AsDateTime := AHoraFim;
 
-  qryTotalDia.Open;
+  qryTotal.Open;
 end;
 
 function Tservices_pluviometro.Insert(const APluviometro: TJSONObject)

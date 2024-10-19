@@ -11,10 +11,12 @@ inherited Pluviometro: TPluviometro
     inherited edtMedia: TDBEdit
       DataField = 'MEDICAO_MEDIA'
       DataSource = dsMedia
+      ReadOnly = True
     end
     inherited edtTotal: TDBEdit
       DataField = 'MEDICAO_TOTAL'
       DataSource = dsTotal
+      ReadOnly = True
     end
   end
   inherited PnlBody: TPanel
