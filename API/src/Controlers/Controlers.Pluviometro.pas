@@ -50,14 +50,15 @@ begin
       raise EHorseException.New.Status(THTTPStatus.NotFound)
         .Error('Registro não encontrado');
 
-    Res.Send<TJSONArray>(LService.GetByPeriodo(LIdUnidade, LDataInicio, LDataFim)
-      .ToJSONArray());
+    Res.Send<TJSONArray>(LService.GetByPeriodo(LIdUnidade, LDataInicio,
+      LDataFim).ToJSONArray());
   finally
     LService.Free;
   end;
 end;
 
-procedure ObterPluviometro(Req: THorseRequest; Res: THorseResponse; Proc: TProc);
+procedure ObterPluviometro(Req: THorseRequest; Res: THorseResponse;
+  Proc: TProc);
 var
   LService: Tservices_pluviometro;
   LIdUnidade: Int64;
@@ -89,8 +90,7 @@ begin
   end;
 end;
 
-procedure ObterMediaDia(Req: THorseRequest; Res: THorseResponse;
-  Proc: TProc);
+procedure ObterMediaDia(Req: THorseRequest; Res: THorseResponse; Proc: TProc);
 var
   LService: Tservices_pluviometro;
   LIdUnidade: Int64;
@@ -122,8 +122,7 @@ begin
   end;
 end;
 
-procedure ObterTotalDia(Req: THorseRequest; Res: THorseResponse;
-  Proc: TProc);
+procedure ObterTotalDia(Req: THorseRequest; Res: THorseResponse; Proc: TProc);
 var
   LService: Tservices_pluviometro;
   LIdUnidade: Int64;
@@ -183,7 +182,47 @@ begin
       raise EHorseException.New.Status(THTTPStatus.NotFound)
         .Error('Registro não encontrado');
 
-    Res.Send<TJSONArray>(LService.GetMediaPeriodo(LIdUnidade, LDataInicio, LDataFim)
+    Res.Send<TJSONArray>(LService.GetMediaPeriodo(LIdUnidade, LDataInicio,
+      LDataFim).ToJSONArray());
+  finally
+    LService.Free;
+  end;
+end;
+
+procedure ObterTotalPeriodo(Req: THorseRequest; Res: THorseResponse;
+  Proc: TProc);
+var
+  LService: Tservices_pluviometro;
+  LIdUnidade: Int64;
+  LAux: String;
+  LJSON: TJSONObject;
+  LDataInicio, LDataFim: TDateTime;
+begin
+  LService := Tservices_pluviometro.Create(nil);
+  try
+    LIdUnidade := Req.Params.Items['id'].ToInt64;
+
+    LJSON := TJSONObject.ParseJSONValue(Req.Body) As TJSONObject;
+
+    LAux := LJSON.Get('data_inicio').JsonValue.ToString;
+    LAux := copy(LAux, 2, Length(LAux) - 2);
+    LAux := StringReplace(LAux, '.', '/', [rfReplaceAll]);
+    LDataInicio := StrToDate(LAux);
+
+    LAux := LJSON.Get('data_fim').JsonValue.ToString;
+    LAux := copy(LAux, 2, Length(LAux) - 2);
+    LAux := StringReplace(LAux, '.', '/', [rfReplaceAll]);
+    LDataFim := StrToDate(LAux);
+    LDataFim := IncDay(LDataFim);
+
+    LDataInicio := LDataInicio + EncodeTime(0, 0, 0, 0);
+    LDataFim := LDataFim + EncodeTime(0, 0, 0, 0);
+
+    If LService.GetTotalPeriodo(LIdUnidade, LDataInicio, LDataFim).IsEmpty then
+      raise EHorseException.New.Status(THTTPStatus.NotFound)
+        .Error('Registro não encontrado');
+
+    Res.Send<TJSONArray>(LService.GetTotalPeriodo(LIdUnidade, LDataInicio, LDataFim)
       .ToJSONArray());
   finally
     LService.Free;
@@ -198,6 +237,7 @@ begin
   THorse.Get('/pluviometros/:id/media/dia', ObterMediaDia);
   THorse.Get('/pluviometros/:id/total/dia', ObterTotalDia);
   THorse.Get('/pluviometros/:id/media/periodo', ObterMediaPeriodo);
+  THorse.Get('/pluviometros/:id/total/periodo', ObterTotalPeriodo);
 end;
 
 end.

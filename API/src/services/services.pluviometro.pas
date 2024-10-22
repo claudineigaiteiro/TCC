@@ -39,6 +39,8 @@ type
       : TFDQuery;
     function GetMediaPeriodo(const AId: Int64; ADataInicio, ADataFim: TDateTime)
       : TFDQuery;
+    function GetTotalPeriodo(const AId: Int64; ADataInicio, ADataFim: TDateTime)
+      : TFDQuery;
   end;
 
 var
@@ -173,6 +175,27 @@ begin
   qryTotal.ParamByName('id').AsLargeInt := AId;
   qryTotal.ParamByName('hora_inicio').AsDateTime := AHoraInicio;
   qryTotal.ParamByName('hora_fim').AsDateTime := AHoraFim;
+
+  qryTotal.Open;
+end;
+
+function Tservices_pluviometro.GetTotalPeriodo(const AId: Int64; ADataInicio, ADataFim: TDateTime): TFDQuery;
+const
+  CSQL = 'SELECT 0 AS ID, ' + #13 +
+    'COALESCE(SUM(P.MEDICAO), 0) AS MEDICAO_TOTAL ' + #13 +
+    '  FROM PLUVIOMETRO P ' + #13 +
+    ' WHERE P.DATA_HORA >= CAST(:hora_inicio AS TIMESTAMP) ' + #13 +
+    '   AND P.DATA_HORA < CAST(:hora_fim AS TIMESTAMP) ' + #13 +
+    '   AND P.ID_UNIDADE = :id ';
+begin
+  Result := qryTotal;
+
+  qryTotal.SQL.Clear;
+  qryTotal.SQL.Add(CSQL);
+
+  qryTotal.ParamByName('id').AsLargeInt := AId;
+  qryTotal.ParamByName('hora_inicio').AsDateTime := ADataInicio;
+  qryTotal.ParamByName('hora_fim').AsDateTime := ADataFim;
 
   qryTotal.Open;
 end;
