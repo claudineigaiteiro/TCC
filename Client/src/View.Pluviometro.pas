@@ -43,7 +43,8 @@ type
     class function getTotalDia(AIdUnidade: String; AData: TDate): String;
     class function getMediaPeriodo(AIdUnidade: String;
       ADataInicio, ADataFim: TDate): String;
-    class function getTotalPeriodo(AIdUnidade: String; ADataInicio, ADataFim: TDate): String;
+    class function getTotalPeriodo(AIdUnidade: String;
+      ADataInicio, ADataFim: TDate): String;
   end;
 
 var
@@ -84,8 +85,8 @@ begin
           FreeAndNil(LJsonStream);
         End;
 
-        LJsonStream := TStringStream.Create
-          (getTotalDia(FUnidade.ID, tpDataInicio.Date));
+        LJsonStream := TStringStream.Create(getTotalDia(FUnidade.ID,
+          tpDataInicio.Date));
         Try
           mtTotal.Close;
           mtTotal.LoadFromJSON(LJsonStream.DataString);
@@ -117,8 +118,8 @@ begin
           FreeAndNil(LJsonStream);
         End;
 
-        LJsonStream := TStringStream.Create
-          (getTotalDia(FUnidade.ID, tpDataInicio.Date));
+        LJsonStream := TStringStream.Create(getTotalPeriodo(FUnidade.ID,
+          tpDataInicio.Date, tpDataFim.Date));
         Try
           mtTotal.Close;
           mtTotal.LoadFromJSON(LJsonStream.DataString);
@@ -235,7 +236,8 @@ begin
   Result := LResponse.Content;
 end;
 
-class function TPluviometro.getTotalDia(AIdUnidade: String; AData: TDate): String;
+class function TPluviometro.getTotalDia(AIdUnidade: String;
+  AData: TDate): String;
 const
   CUrl = 'http://localhost:9000/pluviometros/%s/total/dia';
 var
@@ -253,19 +255,24 @@ begin
   Result := LResponse.Content;
 end;
 
-class function TPluviometro.getTotalPeriodo(AIdUnidade: String; ADataInicio, ADataFim: TDate): String;
+class function TPluviometro.getTotalPeriodo(AIdUnidade: String;
+  ADataInicio, ADataFim: TDate): String;
 const
-  CUrl = 'http://localhost:9000/pluviometros/%s/total/dia';
+  CUrl = 'http://localhost:9000/pluviometros/%s/total/periodo';
 var
   LResponse: IResponse;
   LUrl: String;
-  LData: String;
+  LDataInicio, LDataFim: String;
 begin
-  LData := DateToStr(AData);
-  LData := StringReplace(LData, '/', '.', [rfReplaceAll]);
+  LDataInicio := DateToStr(ADataInicio);
+  LDataInicio := StringReplace(LDataInicio, '/', '.', [rfReplaceAll]);
+
+  LDataFim := DateToStr(ADataFim);
+  LDataFim := StringReplace(LDataFim, '/', '.', [rfReplaceAll]);
+
   LUrl := Format(CUrl, [AIdUnidade]);
   LResponse := TRequest.New.BaseURL(LUrl)
-    .AddBody(TJSONObject.Create.AddPair('data', LData))
+    .AddBody(TJSONObject.Create.AddPair('data_inicio', LDataInicio).AddPair('data_fim', LDataFim))
     .Accept('application/json').Get;
 
   Result := LResponse.Content;
