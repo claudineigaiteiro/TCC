@@ -17,8 +17,11 @@ float windspeed = 0; // Velocidade do vento (m/s)
 float speedwind = 0; // Velocidade do vento (km/h)
 
 // Wi-Fi credentials
-const char* ssid = "Auri mayolo";     // Substitua pelo nome da sua rede Wi-Fi
-const char* password = "auri2019";    // Substitua pela senha da sua rede Wi-Fi
+//const char* ssid = "Auri mayolo";    
+//const char* password = "auri2019";   
+
+const char* ssid = "Variani404";    
+const char* password = "ap4042022rv";
 
 void setup() {
   pinMode(Hall_sensor, INPUT_PULLUP); // Configura o pino do sensor como entrada com pull-up
@@ -57,8 +60,10 @@ void anemometro() {
   Serial.print(speedwind);
   Serial.println(" [km/h]");
 
-  // Envia os dados para o servidor via HTTP POST em formato JSON
-  sendWindDataToServer(windspeed, speedwind);
+  if (speedwind > 0){
+    // Envia os dados para o servidor via HTTP POST em formato JSON
+    sendWindDataToServer(windspeed, speedwind);
+  }
 }
 
 // Função chamada pela interrupção para contar os pulsos
@@ -85,12 +90,13 @@ void connectToWiFi() {
 void sendWindDataToServer(float windspeed, float speedwind) {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-    http.begin("http://192.168.0.106:9000/aneometro"); // Endereço da API
+    http.begin("http://192.168.0.103:9000/aneometros"); // Endereço da API
     http.addHeader("Content-Type", "application/json"); // Tipo de conteúdo JSON
 
     StaticJsonDocument<200> jsonDoc;
-    jsonDoc["windspeed_mps"] = windspeed; // Velocidade em m/s
-    jsonDoc["speedwind_kph"] = speedwind; // Velocidade em km/h
+    //jsonDoc["windspeed_mps"] = windspeed; // Velocidade em m/s
+    jsonDoc["VELOCIDADE"] = speedwind; // Velocidade em km/h
+    jsonDoc["chave"] = "{6F8111FF-45B9-4971-BF38-61310B11D9B5}";
     
     String jsonData;
     serializeJson(jsonDoc, jsonData);
