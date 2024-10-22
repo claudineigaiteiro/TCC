@@ -39,8 +39,11 @@ type
     class function getLeituraDiaria(AIdUnidade: String; AData: TDate): String;
     class function getLeituraPeriodo(AIdUnidade: String;
       ADataInicio, ADataFim: TDate): String;
-    class function getMedia(AIdUnidade: String; AData: TDate): String;
+    class function getMediaDia(AIdUnidade: String; AData: TDate): String;
     class function getTotal(AIdUnidade: String; AData: TDate): String;
+
+    class function getMediaPeriodo(AIdUnidade: String;
+      ADataInicio, ADataFim: TDate): String;
   end;
 
 var
@@ -71,8 +74,8 @@ begin
           FreeAndNil(LJsonStream);
         End;
 
-        LJsonStream := TStringStream.Create
-          (getMedia(FUnidade.ID, tpDataInicio.Date));
+        LJsonStream := TStringStream.Create(getMediaDia(FUnidade.ID,
+          tpDataInicio.Date));
         Try
           mtMedia.Close;
           mtMedia.LoadFromJSON(LJsonStream.DataString);
@@ -100,6 +103,16 @@ begin
           mtGrafico.Close;
           mtGrafico.LoadFromJSON(LJsonStream.DataString);
           mtGrafico.Open;
+        Finally
+          FreeAndNil(LJsonStream);
+        End;
+
+        LJsonStream := TStringStream.Create(getMediaPeriodo(FUnidade.ID,
+          tpDataInicio.Date, tpDataFim.Date));
+        Try
+          mtMedia.Close;
+          mtMedia.LoadFromJSON(LJsonStream.DataString);
+          mtMedia.Open;
         Finally
           FreeAndNil(LJsonStream);
         End;
@@ -172,7 +185,8 @@ begin
   Result := LResponse.Content;
 end;
 
-class function TPluviometro.getMedia(AIdUnidade: String; AData: TDate): String;
+class function TPluviometro.getMediaDia(AIdUnidade: String;
+  AData: TDate): String;
 const
   CUrl = 'http://localhost:9000/pluviometros/%s/media/dia';
 var
@@ -185,6 +199,27 @@ begin
   LUrl := Format(CUrl, [AIdUnidade]);
   LResponse := TRequest.New.BaseURL(LUrl)
     .AddBody(TJSONObject.Create.AddPair('data', LData))
+    .Accept('application/json').Get;
+
+  Result := LResponse.Content;
+end;
+
+class function TPluviometro.getMediaPeriodo(AIdUnidade: String;
+  ADataInicio, ADataFim: TDate): String;
+const
+  CUrl = 'http://localhost:9000/pluviometros/%s/media/periodo';
+var
+  LResponse: IResponse;
+  LUrl: String;
+  LDataInicio, LDataFim: String;
+begin
+  LDataInicio := DateToStr(ADataInicio);
+  LDataInicio := StringReplace(LDataInicio, '/', '.', [rfReplaceAll]);
+  LDataFim := DateToStr(ADataFim);
+  LDataFim := StringReplace(LDataFim, '/', '.', [rfReplaceAll]);
+  LUrl := Format(CUrl, [AIdUnidade]);
+  LResponse := TRequest.New.BaseURL(LUrl)
+    .AddBody(TJSONObject.Create.AddPair('data_inicio', LDataInicio).AddPair('data_fim', LDataFIm))
     .Accept('application/json').Get;
 
   Result := LResponse.Content;
