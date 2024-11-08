@@ -9,7 +9,9 @@ uses
   Classe.Aneometro in 'src\Classe.Aneometro.pas',
   View.FormBaseDemonstracao in 'src\View.FormBaseDemonstracao.pas' {frmBaseDesmonstracao},
   View.Pluviometro in 'src\View.Pluviometro.pas' {Pluviometro},
-  Types in 'src\Types.pas';
+  Types in 'src\Types.pas',
+  View.Anemometro in 'src\View.Anemometro.pas' {Anemometro},
+  View.Imagem in 'src\View.Imagem.pas' {Imagem};
 
 {$R *.res}
 
@@ -18,5 +20,7 @@ begin
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Glossy');
   Application.CreateForm(TFrmMenuInicial, FrmMenuInicial);
+  Application.CreateForm(TAnemometro, Anemometro);
+  Application.CreateForm(TImagem, Imagem);
   Application.Run;
 end.

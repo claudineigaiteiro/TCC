@@ -154,6 +154,13 @@ object FrmMenuInicial: TFrmMenuInicial
         Caption = 'Grafico pluvi'#244'metro'
         OnClick = miGraficoPluviometroClick
       end
+      object miGraficoAnemometro: TMenuItem
+        Caption = 'Grafico anem'#244'metro'
+      end
+      object miListaImagem: TMenuItem
+        Caption = 'Album de imagens'
+        OnClick = miListaImagemClick
+      end
     end
   end
   object mtGraficoPluviometro: TFDMemTable

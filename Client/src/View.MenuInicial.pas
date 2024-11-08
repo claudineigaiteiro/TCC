@@ -42,12 +42,15 @@ type
     mtGraficoAneometroID_UNIDADE: TIntegerField;
     miDados: TMenuItem;
     miGraficoPluviometro: TMenuItem;
+    miGraficoAnemometro: TMenuItem;
+    miListaImagem: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AtualizarRodape;
     procedure BtnRodapeUnidadesClick(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure miGraficoPluviometroClick(Sender: TObject);
+    procedure miListaImagemClick(Sender: TObject);
   private
     FUnidade: TUnidade;
     FGrafico: TWebCharts;
@@ -71,7 +74,7 @@ implementation
 
 uses
   View.Unidades, System.JSON, View.Pluviometro, Charts.Types,
-  Classe.Aneometro;
+  Classe.Aneometro, View.Imagem;
 
 procedure TFrmMenuInicial.AtualizarRodape;
 begin
@@ -124,9 +127,10 @@ begin
               FGrafico.NewProject.Charts._ChartType(line)
                 .Attributes.Name('Pluviometro').ColSpan(12)
                 .DataSet.DataSet(mtGraficoAneometro)
-                .textLabel('Velocidade do vento por hora do dia corrente').Fill(True)
-                .LabelName('DATA_HORA').ValueName('VELOCIDADE').RGBName('0.0.0')
-                .&End.&End.&End.&End.WebBrowser(wbAneometro).Generated;
+                .textLabel('Velocidade do vento por hora do dia corrente')
+                .Fill(True).LabelName('DATA_HORA').ValueName('VELOCIDADE')
+                .RGBName('0.0.0').&End.&End.&End.&End.WebBrowser(wbAneometro)
+                .Generated;
             Finally
               FreeAndNil(LAneometro);
               FreeAndNil(LJsonStream);
@@ -237,6 +241,17 @@ begin
     Pluviometro.ShowModal;
   finally
     FreeAndNil(Pluviometro);
+  end;
+end;
+
+procedure TFrmMenuInicial.miListaImagemClick(Sender: TObject);
+begin
+  Imagem := TImagem.Create(nil);
+  try
+    Imagem.Unidade := FUnidade;
+    Imagem.ShowModal;
+  finally
+    FreeAndNil(Imagem);
   end;
 end;
 

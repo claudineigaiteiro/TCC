@@ -145,6 +145,14 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="src\Types.pas"/>
+        <DCCReference Include="src\View.Anemometro.pas">
+            <Form>Anemometro</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="src\View.Imagem.pas">
+            <Form>Imagem</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
