@@ -46,6 +46,7 @@ object Imagem: TImagem
         'Diario'
         'Per'#237'odo')
       TabOrder = 0
+      OnClick = RgTipoBuscaClick
     end
     object BtnGerarDados: TButton
       Left = 534
@@ -116,7 +117,7 @@ object Imagem: TImagem
       OnClick = Button2Click
     end
   end
-  object DBImage1: TDBImage
+  object dbiImagens: TDBImage
     Left = 0
     Top = 73
     Width = 624

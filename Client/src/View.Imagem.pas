@@ -21,7 +21,7 @@ type
     tpDataInicio: TDateTimePicker;
     tpDataFim: TDateTimePicker;
     pnlFooter: TPanel;
-    DBImage1: TDBImage;
+    dbiImagens: TDBImage;
     mtImagens: TFDMemTable;
     dsImagens: TDataSource;
     mtImagensID: TIntegerField;
@@ -34,10 +34,13 @@ type
     procedure BtnGerarDadosClick(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure BtnVoltarClick(Sender: TObject);
+    procedure RgTipoBuscaClick(Sender: TObject);
   private
     FUnidade: TUnidade;
   public
     class function getLeituraDiaria(AIdUnidade: String; AData: TDate): String;
+    class function getLeituraPeriodo(AIdUnidade: String;
+      ADataInicio, ADataFim: TDate): String;
 
     property Unidade: TUnidade Write FUnidade;
   end;
@@ -72,7 +75,17 @@ begin
       end;
     1:
       begin
-
+        LJsonStream := TStringStream.Create(getLeituraPeriodo(FUnidade.ID,
+          tpDataInicio.Date, tpDataFim.Date));
+        Try
+          mtImagens.Close;
+          mtImagens.LoadFromJSON(LJsonStream.DataString);
+          mtImagens.Open;
+          lblContagem.Caption := IntToStr(mtImagens.RecNo) + '/' +
+            IntToStr(mtImagens.RecordCount);
+        Finally
+          FreeAndNil(LJsonStream);
+        End;
       end;
   end;
 end;
@@ -111,6 +124,50 @@ begin
     Result := LResponse.Content
   else
     ShowMessage('Registro não encontrado');
+end;
+
+class function TImagem.getLeituraPeriodo(AIdUnidade: String;
+  ADataInicio, ADataFim: TDate): String;
+const
+  CUrl = 'http://localhost:9000/imagens/%s/periodo';
+var
+  LResponse: IResponse;
+  LUrl: String;
+  LDataInicio, LDataFim: String;
+begin
+  LDataInicio := DateToStr(ADataInicio);
+  LDataInicio := StringReplace(LDataInicio, '/', '.', [rfReplaceAll]);
+
+  LDataFim := DateToStr(ADataFim);
+  LDataFim := StringReplace(LDataFim, '/', '.', [rfReplaceAll]);
+
+  LUrl := Format(CUrl, [AIdUnidade]);
+  LResponse := TRequest.New.BaseURL(LUrl)
+    .AddBody(TJSONObject.Create.AddPair('data_inicio', LDataInicio)
+    .AddPair('data_fim', LDataFim)).Accept('application/json').Get;
+
+  if LResponse.StatusCode = 200 then
+    Result := LResponse.Content
+  else
+    ShowMessage('Registro não encontrado');
+end;
+
+procedure TImagem.RgTipoBuscaClick(Sender: TObject);
+begin
+  case RgTipoBusca.ItemIndex of
+    0:
+      begin
+        LblDataInicio.Caption := 'Data:';
+        LblDataFim.Visible := False;
+        tpDataFim.Visible := False;
+      end;
+    1:
+      begin
+        LblDataInicio.Caption := 'Data inicio:';
+        LblDataFim.Visible := True;
+        tpDataFim.Visible := True;
+      end;
+  end;
 end;
 
 end.

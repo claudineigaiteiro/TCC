@@ -92,11 +92,15 @@ end;
 
 procedure TFrmMenuInicial.FormDestroy(Sender: TObject);
 begin
-  FTransacaoAneometro.Cancel;
-  FTransacaoPluviometro.Cancel;
+  try
+    FTransacaoAneometro.Cancel;
+    FTransacaoPluviometro.Cancel;
 
-  If Assigned(FGrafico) then
-    FreeAndNil(FGrafico);
+    If Assigned(FGrafico) then
+      FreeAndNil(FGrafico);
+  except
+
+  end;
 end;
 
 procedure TFrmMenuInicial.GerarAtualizarGraficoAneometroMenuPrincipal;
