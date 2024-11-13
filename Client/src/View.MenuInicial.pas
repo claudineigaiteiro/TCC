@@ -51,6 +51,7 @@ type
     procedure miSairClick(Sender: TObject);
     procedure miGraficoPluviometroClick(Sender: TObject);
     procedure miListaImagemClick(Sender: TObject);
+    procedure miGraficoAnemometroClick(Sender: TObject);
   private
     FUnidade: TUnidade;
     FGrafico: TWebCharts;
@@ -73,7 +74,8 @@ implementation
 {$R *.dfm}
 
 uses
-  View.Unidades, System.JSON, View.Pluviometro, Charts.Types, View.Imagem, View.Anemometro;
+  View.Unidades, System.JSON, View.Pluviometro, Charts.Types, View.Imagem,
+  View.Anemometro;
 
 procedure TFrmMenuInicial.AtualizarRodape;
 begin
@@ -228,6 +230,17 @@ begin
   finally
     FreeAndNil(LJsonStream);
   end;
+end;
+
+procedure TFrmMenuInicial.miGraficoAnemometroClick(Sender: TObject);
+begin
+  Anemometro := TAnemometro.Create(Nil);
+  Try
+    Anemometro.Unidade := FUnidade;
+    Anemometro.ShowModal;
+  Finally
+    FreeAndNil(Anemometro);
+  End;
 end;
 
 procedure TFrmMenuInicial.miGraficoPluviometroClick(Sender: TObject);

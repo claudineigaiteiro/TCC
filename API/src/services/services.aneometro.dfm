@@ -41,7 +41,7 @@ inherited services_aneometro: Tservices_aneometro
     Left = 136
     Top = 96
   end
-  object qryMediaAneometro: TFDQuery
+  object qryMedia: TFDQuery
     Connection = fdConecxao
     SQL.Strings = (
       'SELECT'
@@ -50,7 +50,10 @@ inherited services_aneometro: Tservices_aneometro
       '    ANEOMETRO A')
     Left = 136
     Top = 168
-    object qryMediaAneometroVELOCIDADE_MEDIA: TFMTBCDField
+    object qryMediaID: TIntegerField
+      FieldName = 'ID'
+    end
+    object qryMediaVELOCIDADE_MEDIA: TFMTBCDField
       AutoGenerateValue = arDefault
       FieldName = 'VELOCIDADE_MEDIA'
       Origin = 'VELOCIDADE_MEDIA'

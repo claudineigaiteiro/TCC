@@ -156,6 +156,7 @@ object FrmMenuInicial: TFrmMenuInicial
       end
       object miGraficoAnemometro: TMenuItem
         Caption = 'Grafico anem'#244'metro'
+        OnClick = miGraficoAnemometroClick
       end
       object miListaImagem: TMenuItem
         Caption = 'Album de imagens'

@@ -19,7 +19,5 @@ begin
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Glossy');
   Application.CreateForm(TFrmMenuInicial, FrmMenuInicial);
-  Application.CreateForm(TAnemometro, Anemometro);
-  Application.CreateForm(TImagem, Imagem);
   Application.Run;
 end.

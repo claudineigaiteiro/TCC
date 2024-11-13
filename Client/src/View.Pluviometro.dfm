@@ -27,6 +27,8 @@ inherited Pluviometro: TPluviometro
       Height = 309
       Align = alClient
       TabOrder = 0
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ControlData = {
         4C00000049400000F01F00000000000000000000000000000000000000000000
         000000004C000000000000000000000001000000E0D057007335CF11AE690800
