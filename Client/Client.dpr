@@ -6,7 +6,6 @@ uses
   View.Unidades in 'src\View.Unidades.pas' {FrmUnidades},
   Vcl.Themes,
   Vcl.Styles,
-  Classe.Aneometro in 'src\Classe.Aneometro.pas',
   View.FormBaseDemonstracao in 'src\View.FormBaseDemonstracao.pas' {frmBaseDesmonstracao},
   View.Pluviometro in 'src\View.Pluviometro.pas' {Pluviometro},
   Types in 'src\Types.pas',

@@ -135,7 +135,6 @@
             <Form>FrmUnidades</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="src\Classe.Aneometro.pas"/>
         <DCCReference Include="src\View.FormBaseDemonstracao.pas">
             <Form>frmBaseDesmonstracao</Form>
             <FormType>dfm</FormType>

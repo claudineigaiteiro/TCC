@@ -73,8 +73,7 @@ implementation
 {$R *.dfm}
 
 uses
-  View.Unidades, System.JSON, View.Pluviometro, Charts.Types,
-  Classe.Aneometro, View.Imagem;
+  View.Unidades, System.JSON, View.Pluviometro, Charts.Types, View.Imagem, View.Anemometro;
 
 procedure TFrmMenuInicial.AtualizarRodape;
 begin
@@ -113,12 +112,10 @@ begin
         TThread.Synchronize(TThread.CurrentThread,
           procedure
           var
-            LAneometro: TAneometro;
             LJsonStream: TStringStream;
           begin
-            LAneometro := TAneometro.Create;
             Try
-              LJsonStream := TStringStream.Create(LAneometro.getLeituraDiaria
+              LJsonStream := TStringStream.Create(TAnemometro.getLeituraDiaria
                 (FUnidade.ID, Date));
               mtGraficoAneometro.Close;
               mtGraficoAneometro.LoadFromJSON(LJsonStream.DataString);
@@ -136,7 +133,6 @@ begin
                 .RGBName('0.0.0').&End.&End.&End.&End.WebBrowser(wbAneometro)
                 .Generated;
             Finally
-              FreeAndNil(LAneometro);
               FreeAndNil(LJsonStream);
             End;
           end);
@@ -186,13 +182,11 @@ end;
 
 procedure TFrmMenuInicial.GerarGraficoAneometro;
 var
-  LAneometro: TAneometro;
   LJsonStream: TStringStream;
 begin
-  LAneometro := TAneometro.Create;
   try
     LJsonStream := TStringStream.Create
-      (LAneometro.getLeituraDiaria(FUnidade.ID, Date));
+      (TAnemometro.getLeituraDiaria(FUnidade.ID, Date));
     mtGraficoAneometro.Close;
     mtGraficoAneometro.LoadFromJSON(LJsonStream.DataString);
     mtGraficoAneometro.Open();
@@ -207,7 +201,6 @@ begin
       .LabelName('DATA_HORA').ValueName('VELOCIDADE').RGBName('0.0.0')
       .&End.&End.&End.&End.WebBrowser(wbAneometro).Generated;
   finally
-    FreeAndNil(LAneometro);
     FreeAndNil(LJsonStream);
   end;
 end;
