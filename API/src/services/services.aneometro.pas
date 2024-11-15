@@ -126,25 +126,19 @@ end;
 function Tservices_aneometro.GetMediaPeriodo(const AId: Int64; ADataInicio, ADataFim: TDateTime): TFDQuery;
 const
   CSQL =
-    'WITH RECURSIVE CALENDARIO AS ( ' + #13 +
-    '   SELECT CAST(:data_inicio AS DATE) AS DATA ' + #13 +
-    '     FROM RDB$DATABASE ' + #13 +
-    '   UNION ALL ' + #13 +
-    '   SELECT DATA + 1 ' + #13 +
-    '     FROM CALENDARIO ' + #13 +
-    '    WHERE DATA < :data_fim ' + #13 +
-    '), ' + #13 +
-    'VELOCIDADES_DIARIAS AS ( ' + #13 +
-    '   SELECT C.DATA, ' + #13 +
-    '          COALESCE(AVG(A.VELOCIDADE), 0) AS MEDIA_DIARIA ' + #13 +
-    '     FROM CALENDARIO C ' + #13 +
-    '     LEFT JOIN ANEOMETRO A ' + #13 +
-    '       ON CAST(A.DATA_HORA AS DATE) = C.DATA ' + #13 +
-    '      AND A.ID_UNIDADE = :id_unidade ' + #13 +
-    '    GROUP BY C.DATA ) ' + #13 +
+    'WITH RECURSIVE HORAS AS ( ' + #13 +
+    ' SELECT CAST(:data_inicio AS TIMESTAMP) AS DATA_HORA ' + #13 +
+    '   FROM RDB$DATABASE ' + #13 +
+    '  UNION ALL ' + #13 +
+    ' SELECT DATEADD(1 HOUR TO DATA_HORA) ' + #13 +
+    '   FROM HORAS ' + #13 +
+    '  WHERE DATA_HORA < CAST(:data_fim AS TIMESTAMP) ' + #13 + ') ' + #13 +
     'SELECT 0 AS ID, ' + #13 +
-    '       COALESCE(AVG(V.MEDIA_DIARIA), 0) AS VELOCIDADE_MEDIA ' + #13 +
-    '  FROM VELOCIDADES_DIARIAS V;';
+    'COALESCE(SUM(A.VELOCIDADE), 0) / COUNT(DISTINCT CAST(H.DATA_HORA AS DATE)) AS VELOCIDADE_MEDIA '
+    + #13 + '  FROM HORAS H ' + #13 + '  LEFT JOIN ANEOMETRO A ' + #13 +
+    '    ON A.DATA_HORA >= H.DATA_HORA ' + #13 +
+    '   AND A.DATA_HORA < DATEADD(1 HOUR TO H.DATA_HORA) ' + #13 +
+    '   AND A.ID_UNIDADE = :id_unidade ';
 begin
   Result := qryMedia;
   qryMedia.SQL.Clear;;
