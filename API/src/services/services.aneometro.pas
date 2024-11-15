@@ -102,8 +102,7 @@ end;
 function Tservices_aneometro.GetMediaByDia(const AId: Int64;
   AHoraInicio, AHoraFim: TDateTime): TFDQuery;
 const
-  CSql =
-    'SELECT 0 AS ID, ' + #13 +
+  CSQL = 'SELECT 0 AS ID, ' + #13 +
     '       COALESCE(SUM(A.VELOCIDADE), 0)/24 AS VELOCIDADE_MEDIA ' + #13 +
     '  FROM ANEOMETRO A ' + #13 +
     ' WHERE A.DATA_HORA >= CAST(:hora_inicio AS TIMESTAMP) ' + #13 +

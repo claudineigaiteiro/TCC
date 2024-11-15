@@ -6,8 +6,10 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, View.FormBaseDemonstracao, Vcl.StdCtrls,
-  Vcl.Mask, Vcl.ExtCtrls, Vcl.DBCtrls, Vcl.ComCtrls, Types, View.WebCharts, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
-  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.OleCtrls,
+  Vcl.Mask, Vcl.ExtCtrls, Vcl.DBCtrls, Vcl.ComCtrls, Types, View.WebCharts,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.OleCtrls,
   SHDocVw;
 
 type
@@ -30,6 +32,8 @@ type
   public
     class function getLeituraDiaria(AIdUnidade: String; AData: TDate): String;
     class function getMediaDia(AIdUnidade: String; AData: TDate): String;
+    class function getLeituraPeriodo(AIdUnidade: String;
+      ADataInicio, ADataFim: TDate): String;
 
     property Unidade: TUnidade write FUnidade;
   end;
@@ -73,48 +77,38 @@ begin
           FreeAndNil(LJsonStream);
         End;
 
-//        LJsonStream := TStringStream.Create(getTotalDia(FUnidade.ID,
-//          tpDataInicio.Date));
-//        Try
-//          mtTotal.Close;
-//          mtTotal.LoadFromJSON(LJsonStream.DataString);
-//          mtTotal.Open;
-//        Finally
-//          FreeAndNil(LJsonStream);
-//        End;
-
       end;
     1:
       begin
-//        LJsonStream := TStringStream.Create(getLeituraPeriodo(FUnidade.ID,
-//          tpDataInicio.Date, tpDataFim.Date));
-//        Try
-//          mtGrafico.Close;
-//          mtGrafico.LoadFromJSON(LJsonStream.DataString);
-//          mtGrafico.Open;
-//        Finally
-//          FreeAndNil(LJsonStream);
-//        End;
-//
-//        LJsonStream := TStringStream.Create(getMediaPeriodo(FUnidade.ID,
-//          tpDataInicio.Date, tpDataFim.Date));
-//        Try
-//          mtMedia.Close;
-//          mtMedia.LoadFromJSON(LJsonStream.DataString);
-//          mtMedia.Open;
-//        Finally
-//          FreeAndNil(LJsonStream);
-//        End;
-//
-//        LJsonStream := TStringStream.Create(getTotalPeriodo(FUnidade.ID,
-//          tpDataInicio.Date, tpDataFim.Date));
-//        Try
-//          mtTotal.Close;
-//          mtTotal.LoadFromJSON(LJsonStream.DataString);
-//          mtTotal.Open;
-//        Finally
-//          FreeAndNil(LJsonStream);
-//        End;
+        LJsonStream := TStringStream.Create(getLeituraPeriodo(FUnidade.ID,
+          tpDataInicio.Date, tpDataFim.Date));
+        Try
+          mtGrafico.Close;
+          mtGrafico.LoadFromJSON(LJsonStream.DataString);
+          mtGrafico.Open;
+        Finally
+          FreeAndNil(LJsonStream);
+        End;
+
+        // LJsonStream := TStringStream.Create(getMediaPeriodo(FUnidade.ID,
+        // tpDataInicio.Date, tpDataFim.Date));
+        // Try
+        // mtMedia.Close;
+        // mtMedia.LoadFromJSON(LJsonStream.DataString);
+        // mtMedia.Open;
+        // Finally
+        // FreeAndNil(LJsonStream);
+        // End;
+        //
+        // LJsonStream := TStringStream.Create(getTotalPeriodo(FUnidade.ID,
+        // tpDataInicio.Date, tpDataFim.Date));
+        // Try
+        // mtTotal.Close;
+        // mtTotal.LoadFromJSON(LJsonStream.DataString);
+        // mtTotal.Open;
+        // Finally
+        // FreeAndNil(LJsonStream);
+        // End;
       end;
   end;
   GerarGrafico;
@@ -154,7 +148,30 @@ begin
   Result := LResponse.Content;
 end;
 
-class function TAnemometro.getMediaDia(AIdUnidade: String; AData: TDate): String;
+class function TAnemometro.getLeituraPeriodo(AIdUnidade: String; ADataInicio, ADataFim: TDate): String;
+const
+  CUrl = 'http://localhost:9000/aneometros/%s/periodo';
+var
+  LResponse: IResponse;
+  LUrl: String;
+  LDataInicio, LDataFim: String;
+begin
+  LDataInicio := DateToStr(ADataInicio);
+  LDataInicio := StringReplace(LDataInicio, '/', '.', [rfReplaceAll]);
+
+  LDataFim := DateToStr(ADataFim);
+  LDataFim := StringReplace(LDataFim, '/', '.', [rfReplaceAll]);
+
+  LUrl := Format(CUrl, [AIdUnidade]);
+  LResponse := TRequest.New.BaseURL(LUrl)
+    .AddBody(TJSONObject.Create.AddPair('data_inicio', LDataInicio)
+    .AddPair('data_fim', LDataFim)).Accept('application/json').Get;
+
+  Result := LResponse.Content;
+end;
+
+class function TAnemometro.getMediaDia(AIdUnidade: String;
+  AData: TDate): String;
 const
   CUrl = 'http://localhost:9000/aneometros/%s/media/dia';
 var
