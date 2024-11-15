@@ -90,8 +90,7 @@ begin
   end;
 end;
 
-procedure ObterMediaDia(Req: THorseRequest; Res: THorseResponse;
-  Proc: TProc);
+procedure ObterMediaDia(Req: THorseRequest; Res: THorseResponse; Proc: TProc);
 var
   LService: Tservices_aneometro;
   LIdUnidade: Int64;
@@ -116,8 +115,43 @@ begin
       raise EHorseException.New.Status(THTTPStatus.NotFound)
         .Error('Registro não encontrado');
 
-    Res.Send<TJSONArray>(LService.GetMediaByDia(LIdUnidade, LDataInicio, LDataFim)
-      .ToJSONArray());
+    Res.Send<TJSONArray>(LService.GetMediaByDia(LIdUnidade, LDataInicio,
+      LDataFim).ToJSONArray());
+  finally
+    LService.Free;
+  end;
+end;
+
+procedure ObterMediaPeriodo(Req: THorseRequest; Res: THorseResponse;
+  Proc: TProc);
+var
+  LService: Tservices_aneometro;
+  LIdUnidade: Int64;
+  LAux: String;
+  LJSON: TJSONObject;
+  LDataInicio, LDataFim: TDate;
+begin
+  LService := Tservices_aneometro.Create(nil);
+  try
+    LIdUnidade := Req.Params.Items['id'].ToInt64;
+
+    LJSON := TJSONObject.ParseJSONValue(Req.Body) As TJSONObject;
+    LAux := LJSON.Get('data_inicio').JsonValue.ToString;
+    LAux := copy(LAux, 2, Length(LAux) - 2);
+    LAux := StringReplace(LAux, '.', '/', [rfReplaceAll]);
+    LDataInicio := StrToDate(LAux);
+
+    LAux := LJSON.Get('data_fim').JsonValue.ToString;
+    LAux := copy(LAux, 2, Length(LAux) - 2);
+    LAux := StringReplace(LAux, '.', '/', [rfReplaceAll]);
+    LDataFim := StrToDate(LAux);
+
+    If LService.GetMediaPeriodo(LIdUnidade, LDataInicio, LDataFim).IsEmpty then
+      raise EHorseException.New.Status(THTTPStatus.NotFound)
+        .Error('Registro não encontrado');
+
+    Res.Send<TJSONArray>(LService.GetMediaPeriodo(LIdUnidade, LDataInicio,
+      LDataFim).ToJSONArray());
   finally
     LService.Free;
   end;
@@ -129,6 +163,7 @@ begin
   THorse.Get('/aneometros/:id/periodo', ObterAneometroPeriodo);
   THorse.Get('/aneometros/:id/dia', ObterAneometroDia);
   THorse.Get('/aneometros/:id/media/dia', ObterMediaDia);
+  THorse.Get('/aneometros/:id/media/periodo', ObterMediaPeriodo);
 end;
 
 end.

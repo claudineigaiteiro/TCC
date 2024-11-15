@@ -34,6 +34,8 @@ type
     class function getMediaDia(AIdUnidade: String; AData: TDate): String;
     class function getLeituraPeriodo(AIdUnidade: String;
       ADataInicio, ADataFim: TDate): String;
+    class function getMediaPeriodo(AIdUnidade: String;
+      ADataInicio, ADataFim: TDate): String;
 
     property Unidade: TUnidade write FUnidade;
   end;
@@ -90,25 +92,17 @@ begin
           FreeAndNil(LJsonStream);
         End;
 
-        // LJsonStream := TStringStream.Create(getMediaPeriodo(FUnidade.ID,
-        // tpDataInicio.Date, tpDataFim.Date));
-        // Try
-        // mtMedia.Close;
-        // mtMedia.LoadFromJSON(LJsonStream.DataString);
-        // mtMedia.Open;
-        // Finally
-        // FreeAndNil(LJsonStream);
-        // End;
-        //
-        // LJsonStream := TStringStream.Create(getTotalPeriodo(FUnidade.ID,
-        // tpDataInicio.Date, tpDataFim.Date));
-        // Try
-        // mtTotal.Close;
-        // mtTotal.LoadFromJSON(LJsonStream.DataString);
-        // mtTotal.Open;
-        // Finally
-        // FreeAndNil(LJsonStream);
-        // End;
+        LJsonStream := TStringStream.Create(getMediaPeriodo(FUnidade.ID,
+          tpDataInicio.Date, tpDataFim.Date));
+        Try
+          mtMedia.Close;
+          mtMedia.LoadFromJSON(LJsonStream.DataString);
+          mtMedia.Open;
+        Finally
+          FreeAndNil(LJsonStream);
+        End;
+
+
       end;
   end;
   GerarGrafico;
@@ -148,7 +142,8 @@ begin
   Result := LResponse.Content;
 end;
 
-class function TAnemometro.getLeituraPeriodo(AIdUnidade: String; ADataInicio, ADataFim: TDate): String;
+class function TAnemometro.getLeituraPeriodo(AIdUnidade: String;
+  ADataInicio, ADataFim: TDate): String;
 const
   CUrl = 'http://localhost:9000/aneometros/%s/periodo';
 var
@@ -185,6 +180,27 @@ begin
   LResponse := TRequest.New.BaseURL(LUrl)
     .AddBody(TJSONObject.Create.AddPair('data', LData))
     .Accept('application/json').Get;
+
+  Result := LResponse.Content;
+end;
+
+class function TAnemometro.getMediaPeriodo(AIdUnidade: String;
+  ADataInicio, ADataFim: TDate): String;
+const
+  CUrl = 'http://localhost:9000/aneometros/%s/media/periodo';
+var
+  LResponse: IResponse;
+  LUrl: String;
+  LDataInicio, LDataFim: String;
+begin
+  LDataInicio := DateToStr(ADataInicio);
+  LDataInicio := StringReplace(LDataInicio, '/', '.', [rfReplaceAll]);
+  LDataFim := DateToStr(ADataFim);
+  LDataFim := StringReplace(LDataFim, '/', '.', [rfReplaceAll]);
+  LUrl := Format(CUrl, [AIdUnidade]);
+  LResponse := TRequest.New.BaseURL(LUrl)
+    .AddBody(TJSONObject.Create.AddPair('data_inicio', LDataInicio)
+    .AddPair('data_fim', LDataFim)).Accept('application/json').Get;
 
   Result := LResponse.Content;
 end;

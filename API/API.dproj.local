@@ -33,5 +33,24 @@
     <Transaction>2024/10/07 23:22:19.000.724,=D:\Projetos\TCC\API_2\Unit1.pas</Transaction>
     <Transaction>2024/10/07 23:22:36.000.830,D:\Projetos\TCC\API_2\src\controlers\Controlers.Unidade.pas=D:\Projetos\TCC\API_2\Unit1.pas</Transaction>
     <Transaction>2024/10/14 14:07:56.000.987,D:\Projetos\TCC\API_2\API_2.dproj=D:\Projetos\TCC\API_2\API.dproj</Transaction>
-  </Transactions>
+  </Transactions>  <ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="src"/>
+    <File Path="src\controlers"/>
+    <File Path="src\controlers\Controlers.Aneometro.pas"/>
+    <File Path="src\controlers\Controlers.Imagem.pas"/>
+    <File Path="src\controlers\Controlers.Pluviometro.pas"/>
+    <File Path="src\controlers\Controlers.Unidade.pas"/>
+    <File Path="src\providers"/>
+    <File Path="src\providers\providers.conecxaoDB.pas"/>
+    <File Path="src\providers\providers.conecxaoDB.dfm"/>
+    <File Path="src\services"/>
+    <File Path="src\services\services.aneometro.pas"/>
+    <File Path="src\services\services.aneometro.dfm"/>
+    <File Path="src\services\services.imagem.pas"/>
+    <File Path="src\services\services.imagem.dfm"/>
+    <File Path="src\services\services.pluviometro.pas"/>
+    <File Path="src\services\services.pluviometro.dfm"/>
+    <File Path="src\services\services.unidade.pas"/>
+    <File Path="src\services\services.unidade.dfm"/>
+  </ProjectSortOrder>
 </BorlandProject>

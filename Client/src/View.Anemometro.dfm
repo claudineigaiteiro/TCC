@@ -9,9 +9,15 @@ inherited Anemometro: TAnemometro
     end
   end
   inherited pnlFooter: TPanel
+    inherited LblTotal: TLabel
+      Visible = False
+    end
     inherited edtMedia: TDBEdit
       DataField = 'VELOCIDADE_MEDIA'
       DataSource = dsMedia
+    end
+    inherited edtTotal: TDBEdit
+      Visible = False
     end
   end
   inherited PnlBody: TPanel

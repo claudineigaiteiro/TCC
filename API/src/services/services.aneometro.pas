@@ -32,6 +32,8 @@ type
       : TFDQuery;
     function GetMediaByDia(const AId: Int64; AHoraInicio, AHoraFim: TDateTime)
       : TFDQuery;
+    function GetMediaPeriodo(const AId: Int64; ADataInicio, ADataFim: TDateTime)
+      : TFDQuery;
   end;
 
 var
@@ -119,6 +121,40 @@ begin
   qryMedia.ParamByName('hora_fim').AsDateTime := AHoraFim;
 
   qryMedia.Open;
+end;
+
+function Tservices_aneometro.GetMediaPeriodo(const AId: Int64; ADataInicio, ADataFim: TDateTime): TFDQuery;
+const
+  CSQL =
+    'WITH RECURSIVE CALENDARIO AS ( ' + #13 +
+    '   SELECT CAST(:data_inicio AS DATE) AS DATA ' + #13 +
+    '     FROM RDB$DATABASE ' + #13 +
+    '   UNION ALL ' + #13 +
+    '   SELECT DATA + 1 ' + #13 +
+    '     FROM CALENDARIO ' + #13 +
+    '    WHERE DATA < :data_fim ' + #13 +
+    '), ' + #13 +
+    'VELOCIDADES_DIARIAS AS ( ' + #13 +
+    '   SELECT C.DATA, ' + #13 +
+    '          COALESCE(AVG(A.VELOCIDADE), 0) AS MEDIA_DIARIA ' + #13 +
+    '     FROM CALENDARIO C ' + #13 +
+    '     LEFT JOIN ANEOMETRO A ' + #13 +
+    '       ON CAST(A.DATA_HORA AS DATE) = C.DATA ' + #13 +
+    '      AND A.ID_UNIDADE = :id_unidade ' + #13 +
+    '    GROUP BY C.DATA ) ' + #13 +
+    'SELECT 0 AS ID, ' + #13 +
+    '       COALESCE(AVG(V.MEDIA_DIARIA), 0) AS VELOCIDADE_MEDIA ' + #13 +
+    '  FROM VELOCIDADES_DIARIAS V;';
+begin
+  Result := qryMedia;
+  qryMedia.SQL.Clear;;
+
+  qryMedia.SQL.Add(CSQL);
+
+  qryMedia.ParamByName('id_unidade').AsLargeInt := AId;
+  qryMedia.ParamByName('data_inicio').AsDate := ADataInicio;
+  qryMedia.ParamByName('data_fim').AsDate := ADataFim;
+  qryMedia.Open();
 end;
 
 function Tservices_aneometro.Insert(const AAneometro: TJSONObject): TFDQuery;
