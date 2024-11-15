@@ -27,8 +27,11 @@
 
 //const char* ssid = "Variani404";
 //const char* password = "ap4042022rv";
-const char* ssid = "Auri mayolo";
-const char* password = "auri2019";
+//const char* ssid = "Auri mayolo";
+//const char* password = "auri2019";
+const char* ssid = "TCC_Claudinei";
+const char* password = "fune3011@";
+
 const char* chave = "{6F8111FF-45B9-4971-BF38-61310B11D9B5}";
 
 void sendImageToServer() {
@@ -48,7 +51,7 @@ void sendImageToServer() {
   // Faz o POST para o servidor
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-    http.begin("http://192.168.0.105:9000/imagens");
+    http.begin("http://192.168.0.100:9000/imagens");
     http.addHeader("Content-Type", "application/json");
 
     int httpResponseCode = http.POST(json);
@@ -127,5 +130,5 @@ void loop() {
   digitalWrite(FLASH_GPIO_NUM, LOW);
 
   // Espera 5 segundos antes de capturar e enviar outra imagem
-  delay(5000);
+  delay(60000);
 }

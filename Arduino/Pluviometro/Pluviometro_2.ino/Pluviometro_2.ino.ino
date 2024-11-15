@@ -8,8 +8,11 @@ const int REED = 22; // O reed switch está conectado ao GPIO 22 (D22) no ESP32
 int val = 0, old_val = 0, REEDCOUNT = 0; // Variáveis globais
 
 // Credenciais Wi-Fi
-const char* ssid = "Auri mayolo";     
-const char* password = "auri2019";
+//const char* ssid = "Auri mayolo";     
+//const char* password = "auri2019";
+
+const char* ssid = "TCC_Claudinei";     
+const char* password = "fune3011@";
 
 void setup() {
   pinMode(REED, INPUT_PULLUP); // Configura o reed switch como entrada com pull-up
@@ -39,20 +42,22 @@ void connectToWiFi() {
 void pluviometro() {
   val = digitalRead(REED); // Ler o estado do reed switch
 
-  if (val != old_val) {
+  if ((val == LOW) && (old_val == HIGH)){ 
     delay(10); // Atraso para bouncing
     old_val = val; // Atualiza o valor anterior
     Serial.print("Medida de chuva (calculado): ");
     Serial.print(0.25);
     Serial.println(" mm");
     sendWindDataToServer(0.25);
+  }else{
+    old_val = val;
   } 
 }
 
 void sendWindDataToServer(float speedwind) {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-    http.begin("http://192.168.0.103:9000/pluviometros"); // Endereço da API
+    http.begin("http://192.168.0.100:9000/pluviometros"); // Endereço da API
     http.addHeader("Content-Type", "application/json"); // Tipo de conteúdo JSON
 
     StaticJsonDocument<200> jsonDoc;

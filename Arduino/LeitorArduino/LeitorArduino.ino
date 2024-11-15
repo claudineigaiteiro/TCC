@@ -19,9 +19,11 @@ float speedwind = 0; // Velocidade do vento (km/h)
 // Wi-Fi credentials
 //const char* ssid = "Auri mayolo";    
 //const char* password = "auri2019";   
+//const char* ssid = "Variani404";    
+//const char* password = "ap4042022rv";
 
-const char* ssid = "Variani404";    
-const char* password = "ap4042022rv";
+const char* ssid = "TCC_Claudinei";    
+const char* password = "fune3011@";
 
 void setup() {
   pinMode(Hall_sensor, INPUT_PULLUP); // Configura o pino do sensor como entrada com pull-up
@@ -35,6 +37,7 @@ void loop() {
 
 void anemometro() {
   counter = 0; // Reinicia o contador
+  RPM = 0;
   attachInterrupt(digitalPinToInterrupt(Hall_sensor), addcount, RISING); // Ativar interrupção
 
   unsigned long startTime = millis();
@@ -90,7 +93,7 @@ void connectToWiFi() {
 void sendWindDataToServer(float windspeed, float speedwind) {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-    http.begin("http://192.168.0.103:9000/aneometros"); // Endereço da API
+    http.begin("http://192.168.0.100:9000/aneometros"); // Endereço da API
     http.addHeader("Content-Type", "application/json"); // Tipo de conteúdo JSON
 
     StaticJsonDocument<200> jsonDoc;
